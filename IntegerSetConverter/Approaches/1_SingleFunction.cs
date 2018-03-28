@@ -8,11 +8,22 @@ using System.Threading.Tasks;
 
 namespace IntegerSetConverter
 {
-    class SingleFunctionConverter : INumericConverter
+    partial class SingleFunctionConverter : INumericConverter
     {
         string INumericConverter.ConverterName
         {
             get { return "SingleFunctionConverter"; }
+        }
+
+
+
+        enum AddResult
+        {
+            Undefined = 0,
+
+            Success             = 1,
+            E_InvalidValue      = 10 + 1,   //  Недопустимое значение у одного элемента или в диапазоне.
+            E_SetOverflow       = 10 + 2,   //  Значение описано верно, но его нельзя записать в конечное множество. 
         }
 
 
@@ -24,7 +35,7 @@ namespace IntegerSetConverter
             string aJoint       = ConvertOptions.DefaultJoint
         )
         {
-            StringBuilder Result = new StringBuilder();
+            StringBuilder ResultText = new StringBuilder();
 
 
             if (aData.Length <= 0)
@@ -34,15 +45,28 @@ namespace IntegerSetConverter
 
 
             ///   Первый шаг. Обработка первого элемента. 
+            int I = 0, Value;
             int Prev = aData[0];
 
             int SequenceCounter = 0;
 
-            Result.AppendFormat("{0}", Prev);
+            ResultText.AppendFormat("{0}", Prev);
+
+
+            ///   Инлайн функция для повторяющегося кода.                                          
+            Action inline_SequenceOutput = delegate ()
+            {
+                if (SequenceCounter > 0)
+                {
+                    ResultText.AppendFormat("{0}{1}", aJoint, Prev);
+                    SequenceCounter = 0;
+                }
+            };
+            ///                                                                                    
 
 
             ///   Обход остальных элементов. 
-            for (int I = 1, Value; I < aData.Length; I++, Prev = Value)
+            for (I = 1; I < aData.Length; I++, Prev = Value)
             {
                 Value = aData[I];
 
@@ -58,27 +82,19 @@ namespace IntegerSetConverter
                 }
                 else
                 {
-                    ///   Вывод данных об обнаруженной последовательности. (Дубль!) 
-                    if (SequenceCounter > 0)
-                    {
-                        Result.AppendFormat("{0}{1}", aJoint, Prev);
-                        SequenceCounter = 0;
-                    }
+                    ///   Вывод данных об обнаруженной последовательности. 
+                    inline_SequenceOutput();
 
                     ///   Вывод отдельного элемента. 
-                    Result.AppendFormat("{0}{1}", aSeparator, Value);
+                    ResultText.AppendFormat("{0}{1}", aSeparator, Value);
                 }
             }
 
-            ///   Вывод данных об обнаруженной последовательности. (Дубль!) 
-            if (SequenceCounter > 0)
-            {
-                Result.AppendFormat("{0}{1}", aJoint, Prev);
-                SequenceCounter = 0;
-            }
+            ///   Вывод данных об обнаруженной последовательности. 
+            inline_SequenceOutput();
 
 
-            return Result.ToString();
+            return ResultText.ToString();
         }
 
 
@@ -90,11 +106,13 @@ namespace IntegerSetConverter
             string aJoint       = ConvertOptions.DefaultJoint
         )
         {
-            var Result = new List<int> ();
+            const int DataNumericBase = 10;
+
+            var ResultList = new List<int> ();
 
 
             if (aData.Length <= 0)
-                return Result.ToArray();
+                return ResultList.ToArray();
 
             if (aSeparator  .Length <= 0) throw new ArgumentException("", "Separator");
             if (aJoint      .Length <= 0) throw new ArgumentException("", "Joint");
@@ -104,22 +122,70 @@ namespace IntegerSetConverter
             Char C;
             ParseMode PrevMode = ParseMode.Undefined;
 
+            int I = -1;
+
             int ParseSeparatorIndex = 0;
             int ParseJointIndex     = 0;
             int ParseNumber         = 0;
             int ParseNumberIndex    = 0;
+            int ParseRangeLowIndex  = 0;
 
             int SavedRangeStart     = 0;
             bool SavedRangeMode     = false;
 
+            int LastValue           = int.MinValue;
 
-            for (int I = 0; I < aData.Length; I++)
+
+            ///   Две инлайн функции для повторяющегося кода.                                      
+            Action inline_Add = delegate ()
+            {
+                int Value = ParseNumber;
+
+                if (Value < 0)
+                {
+                    throw new ArgumentException("Invalid elements in input data (invalid value).", "Data");
+                }
+
+                if (Value <= LastValue)
+                {
+                    throw new ArgumentException(String.Format("The input set contains invalid data at index [{0}]. The value is less or equal to previous element.", I), "Data");
+                }
+
+                ResultList.Add(Value);
+                LastValue = Value;
+            };
+            ///                                                                                    
+            Action inline_AddRange = delegate ()
+            {
+                int RStart = SavedRangeStart + 1;
+                int RCount = ParseNumber - SavedRangeStart;
+
+                if ( (RStart < 0) || (RCount <= 0) )
+                {
+                    throw new ArgumentException("Invalid elements in input data (invalid range).", "Data");
+                }
+
+                if (RStart <= LastValue)
+                {
+                    throw new ArgumentException(String.Format("The input set contains invalid data range from [{0}] to [{1}]. The value is less or equal to previous element.", ParseRangeLowIndex, I ), "Data");
+                }
+
+                ResultList.AddRange(Enumerable.Range(RStart, RCount));
+                LastValue = RStart + RCount - 1;
+
+                SavedRangeStart = 0;
+                SavedRangeMode = false;
+            };
+            ///                                                                                    
+
+
+            for (I = 0; I < aData.Length; I++)
             {
                 C = aData[I];
 
 
+                ///   Выбираем режим работы. 
                 ParseMode Mode = ParseMode.Error;
-
 
                 if (Char.IsWhiteSpace(C))
                 {
@@ -135,12 +201,12 @@ namespace IntegerSetConverter
                     ParseJointIndex++;
                     Mode = ParseMode.Joint;
                 }
-                ///   Если мы не вошли в режим разделителя или связки, 
-                ///   и обнаружен символ, отвечающий за цифры. 
+                //   Если мы не вошли в режим разделителя или связки, 
+                //   и обнаружен символ, отвечающий за цифры. 
                 else if (Char.IsNumber(C)) // (ParseJointIndex == 0) && (ParseSeparatorIndex == 0) && 
                 {
-                    ///   Повышаем разряд числа и прибавляем новую часть. 
-                    ParseNumber = (ParseNumber * 10) + (int) Char.GetNumericValue(C); 
+                    //   Повышаем разряд числа и прибавляем новую часть. 
+                    ParseNumber = (ParseNumber * DataNumericBase) + (int) Char.GetNumericValue(C); 
                     ParseNumberIndex++;
                     Mode = ParseMode.Number;
                 }
@@ -150,6 +216,7 @@ namespace IntegerSetConverter
                     throw new ArgumentException("Invalid input data.", "Data");
 
 
+                //  Режим данных изменился = это означает поступление нового элемента
                 if (PrevMode != Mode)
                 {
                     if ((PrevMode == ParseMode.Joint) && (ParseJointIndex > 0))
@@ -185,24 +252,9 @@ namespace IntegerSetConverter
                         ///   Обнаружено начало или продолжение числа. 
 
                         if (SavedRangeMode)
-                        {
-                            int RangeStart = SavedRangeStart + 1;
-                            int RangeCount = ParseNumber - SavedRangeStart;
-
-                            if (RangeCount <= 0)
-                            {
-                                throw new ArgumentException("Invalid elements in input data (invalid range).", "Data");
-                            }
-
-                            Result.AddRange(Enumerable.Range(RangeStart, RangeCount));
-
-                            SavedRangeStart = 0;
-                            SavedRangeMode = false;
-                        }
+                            inline_AddRange();
                         else
-                        {
-                            Result.Add(ParseNumber);
-                        }
+                            inline_Add();
 
                         SavedRangeStart = ParseNumber;
 
@@ -217,19 +269,12 @@ namespace IntegerSetConverter
 
 
             if (SavedRangeMode)
-            {
-                Result.AddRange(Enumerable.Range(SavedRangeStart + 1, ParseNumber - SavedRangeStart));
-
-                SavedRangeStart = 0;
-                SavedRangeMode = false;
-            }
+                inline_AddRange();
             else
-            {
-                Result.Add(ParseNumber);
-            }
+                inline_Add();
 
 
-            return Result.ToArray();
+            return ResultList.ToArray();
         }
 
 
