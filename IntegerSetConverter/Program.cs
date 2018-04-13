@@ -20,6 +20,63 @@ namespace IntegerSetConverter
     ///                                                                                            
     class Program
     {
+        static void Main(String[] args)
+        {
+            //Console.Clear();
+
+            var CSet = new Dictionary<int,INumericConverter>
+            {
+                { 0, new RangeIteratorConverter             { } },
+
+                ///   Преобразователь на основе двух простых функций. 
+                { 1, new SingleFunctionConverter            { } },
+
+                ///   Преобразователь, работающий (по возможности) на основе обычных C# методов. 
+                { 2, new CSharpEnvironmentConverter         { } },
+
+                ///   Простейший текстовый парсер. 
+                { 5, new BasicTextParserConverter           { } },
+            };
+
+            int CKey = 1;
+
+        AskNumber:
+
+            Console.WriteLine("Список преобразователей:");
+            foreach (var C in CSet)
+            {
+                Console.WriteLine(String.Format("  {0}) {1}", C.Key, C.Value.ConverterName));
+            }
+            
+            Console.Write("Пожалуйста, введите номер интересующего преобразователя: ");
+
+            if
+            (
+                //   Пытаемся распознать введенный номер. 
+                //   Если результат безуспешный, спрашиваем снова. 
+                (! int.TryParse(Console.ReadLine(), out CKey)) ||
+                //   Или если номер введен верно, но такого номера нет в наборе, 
+                //   то тоже спрашиваем снова. 
+                (! CSet.ContainsKey(CKey))
+            )
+                goto AskNumber;
+
+
+            ///   Тест преобразования числового набора в строку. 
+            Tests.IntegerToString(CSet[CKey]);
+
+            ///   Тест преобразования строки в числовой набор. 
+            Tests.StringToInteger(CSet[CKey]);
+
+
+            /*  TODO: Пытался предотвратить передачу клавиш в VS после завершения программы,
+                но пока не придумал быстрого решения. Вспомни, как у тебя было в другом проекте. 
+            */
+            //System.Threading.Thread.Sleep(1000);
+        }
+
+
+
         class Tests
         {
             public static void IntegerToString (INumericConverter aConverter)
@@ -44,7 +101,7 @@ namespace IntegerSetConverter
 
                 Random R = new Random();
 
-                for (int N = 1; N <= 5; N++)
+                for (int N = 1; N <= 0; N++)
                 {
                     Sets.Add
                     (
@@ -216,63 +273,6 @@ namespace IntegerSetConverter
                 }
             }
         }
-
-
-
-
-        static void Main(String[] args)
-        {
-            //Console.Clear();
-
-            var CSet = new Dictionary<int,INumericConverter>
-            {
-                ///   Преобразователь на основе двух простых функций. 
-                { 1, new SingleFunctionConverter            { } },
-
-                ///   Преобразователь, работающий (по возможности) на основе обычных C# методов. 
-                { 2, new CSharpEnvironmentConverter         { } },
-
-                ///   Простейший текстовый парсер. 
-                { 5, new BasicTextParserConverter           { } },
-            };
-
-            int CKey = 1;
-
-        AskNumber:
-
-            Console.WriteLine("Список преобразователей:");
-            foreach (var C in CSet)
-            {
-                Console.WriteLine(String.Format("  {0}) {1}", C.Key, C.Value.ConverterName));
-            }
-            
-            Console.Write("Пожалуйста, введите номер интересующего преобразователя: ");
-
-            if
-            (
-                //   Пытаемся распознать введенный номер. 
-                //   Если результат безуспешный, спрашиваем снова. 
-                (! int.TryParse(Console.ReadLine(), out CKey)) ||
-                //   Или если номер введен верно, но такого номера нет в наборе, 
-                //   то тоже спрашиваем снова. 
-                (! CSet.ContainsKey(CKey))
-            )
-                goto AskNumber;
-
-
-            ///   Тест преобразования числового набора в строку. 
-            Tests.IntegerToString(CSet[CKey]);
-
-            ///   Тест преобразования строки в числовой набор. 
-            Tests.StringToInteger(CSet[CKey]);
-
-
-            /*  TODO: Пытался предотвратить передачу клавиш в VS после завершения программы,
-                но пока не придумал быстрого решения. Вспомни, как у тебя было в другом проекте. 
-            */
-            //System.Threading.Thread.Sleep(1000);
-        }
-
 
 
 

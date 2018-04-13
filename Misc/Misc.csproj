@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB01B7CB-5A3C-41D2-BDB8-2EE7E8286B74}</ProjectGuid>
+    <ProjectGuid>{44C47959-7F0F-4F5B-8D5F-0EA1A34967B2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>IntegerSetConverter</RootNamespace>
-    <AssemblyName>IntegerSetConverter</AssemblyName>
+    <RootNamespace>Misc</RootNamespace>
+    <AssemblyName>Misc</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,15 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Approaches\1_RangeIterator.cs" />
-    <Compile Include="Approaches\2_SingleFunction.cs" />
-    <Compile Include="Approaches\4_CSharpEnvironment.cs" />
-    <Compile Include="Approaches\6_GroupedHeapStream.cs" />
-    <Compile Include="ConverterInterface.cs" />
-    <Compile Include="Approaches\3_AbstractClass.cs" />
+    <Compile Include="Exercises\CSharpDataTypes.cs" />
+    <Compile Include="Exercises\LoopNumbers.cs" />
+    <Compile Include="Exercises\ThreadSafeSingleton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Approaches\5_BasicTextParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

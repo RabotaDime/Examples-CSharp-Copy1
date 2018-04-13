@@ -153,12 +153,12 @@ namespace IntegerSetConverter
 
         string INumericConverter.Convert (int[] aData, string aSeparator, string aJoint)
         {
-            return CSharpEnvironmentConverter.Convert(aData, aSeparator, aJoint);
+            return Convert(aData, aSeparator, aJoint);
         }
 
         int[] INumericConverter.Convert (string aData, string aSeparator, string aJoint)
         {
-            return CSharpEnvironmentConverter.Convert(aData, aSeparator, aJoint);
+            return Convert(aData, aSeparator, aJoint);
         }
     }
 }

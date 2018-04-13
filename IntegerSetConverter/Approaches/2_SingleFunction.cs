@@ -8,22 +8,11 @@ using System.Threading.Tasks;
 
 namespace IntegerSetConverter
 {
-    partial class SingleFunctionConverter : INumericConverter
+    class SingleFunctionConverter : INumericConverter
     {
         string INumericConverter.ConverterName
         {
             get { return "SingleFunctionConverter"; }
-        }
-
-
-
-        enum AddResult
-        {
-            Undefined = 0,
-
-            Success             = 1,
-            E_InvalidValue      = 10 + 1,   //  Недопустимое значение у одного элемента или в диапазоне.
-            E_SetOverflow       = 10 + 2,   //  Значение описано верно, но его нельзя записать в конечное множество. 
         }
 
 
@@ -35,9 +24,6 @@ namespace IntegerSetConverter
             string aJoint       = ConvertOptions.DefaultJoint
         )
         {
-            StringBuilder ResultText = new StringBuilder();
-
-
             if (aData.Length <= 0)
             {
                 return String.Empty;
@@ -49,6 +35,8 @@ namespace IntegerSetConverter
             int Prev = aData[0];
 
             int SequenceCounter = 0;
+
+            StringBuilder ResultText = new StringBuilder();
 
             ResultText.AppendFormat("{0}", Prev);
 
@@ -293,14 +281,14 @@ namespace IntegerSetConverter
 
         string INumericConverter.Convert (int[] aData, string aSeparator, string aJoint)
         {
-            return SingleFunctionConverter.Convert(aData, aSeparator, aJoint);
+            return Convert(aData, aSeparator, aJoint);
         }
 
 
 
         int[] INumericConverter.Convert (string aData, string aSeparator, string aJoint)
         {
-            return SingleFunctionConverter.Convert(aData, aSeparator, aJoint);
+            return Convert(aData, aSeparator, aJoint);
         }
     }
 }
