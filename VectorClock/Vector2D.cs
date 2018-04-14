@@ -23,6 +23,13 @@ namespace VectorClock
 
 
 
+        public override string ToString ()
+        {
+            return "[" + ((double) A).ToString() + ", " + ((double) B).ToString() + "]";
+        }
+
+
+
         public float Length
         {
             get { return (float) Math.Sqrt((A * A) + (B * B)); }

@@ -50,10 +50,10 @@
             // BMinFontLabel
             // 
             this.BMinFontLabel.AutoSize = true;
-            this.BMinFontLabel.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BMinFontLabel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.BMinFontLabel.Location = new System.Drawing.Point(11, 26);
             this.BMinFontLabel.Name = "BMinFontLabel";
-            this.BMinFontLabel.Size = new System.Drawing.Size(233, 21);
+            this.BMinFontLabel.Size = new System.Drawing.Size(199, 18);
             this.BMinFontLabel.TabIndex = 4;
             this.BMinFontLabel.Text = "Font: Highlighted Minutes";
             this.BMinFontLabel.Visible = false;
@@ -61,10 +61,11 @@
             // MinFontLabel
             // 
             this.MinFontLabel.AutoSize = true;
+            this.MinFontLabel.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MinFontLabel.ForeColor = System.Drawing.Color.DimGray;
             this.MinFontLabel.Location = new System.Drawing.Point(12, 9);
             this.MinFontLabel.Name = "MinFontLabel";
-            this.MinFontLabel.Size = new System.Drawing.Size(142, 17);
+            this.MinFontLabel.Size = new System.Drawing.Size(138, 17);
             this.MinFontLabel.TabIndex = 3;
             this.MinFontLabel.Text = "Font: Normal Minutes";
             this.MinFontLabel.Visible = false;
@@ -85,6 +86,7 @@
             // TimerObject
             // 
             this.TimerObject.Enabled = true;
+            this.TimerObject.Interval = 10;
             this.TimerObject.Tick += new System.EventHandler(this.TimerObject_Tick);
             // 
             // ClockForm
@@ -96,8 +98,10 @@
             this.Controls.Add(this.HrsFontLabel);
             this.Controls.Add(this.BMinFontLabel);
             this.Controls.Add(this.MinFontLabel);
+            this.DoubleBuffered = true;
             this.Name = "ClockForm";
             this.Text = "Form1";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ClockForm_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
 
