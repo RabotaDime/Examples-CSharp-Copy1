@@ -31,6 +31,8 @@ namespace VectorClock
             new Vector2D { },
         };
 
+        public NumericUpDown[] ClockInputs = new NumericUpDown [4];
+
 
 
         public ClockForm ()
@@ -43,6 +45,12 @@ namespace VectorClock
             ClockStyle.Numbers.SecondaryMinutesFont = this.MinFontLabel.Font;
             ClockStyle.Numbers.PrimaryMinutesFont   = this.BMinFontLabel.Font;
             ClockStyle.Numbers.HoursFont            = this.HrsFontLabel.Font;
+
+            ClockInputs[0] = this.numericUpDown1;
+            ClockInputs[1] = this.numericUpDown2;
+            ClockInputs[2] = this.numericUpDown3;
+            //ClockInputs[3] = this.numericUpDown4;
+            //ClockInputs[4] = this.numericUpDown5;
         }
 
 
@@ -50,20 +58,20 @@ namespace VectorClock
         public const float HoursCycleBase = 12.0f;
         public const float MinSecCycleBase = 60.0f;
 
-        public static float GetClockAngleH (float HoursValue)
+        public static Angle GetClockAngleH (float HoursValue)
         {
             //  Вычитаем превышение часов более 12
             float Hours = HoursValue - ((float) Math.Round(HoursValue / HoursCycleBase) * HoursCycleBase);
             float Result = (360.0f / HoursCycleBase) * (Hours);
-            return (Result - 90.0f);
+            return new Angle (Result - 90.0f, AngleType.Degrees);
         }
 
-        public static float GetClockAngleM (float MinSecValue)
+        public static Angle GetClockAngleM (float MinSecValue)
         {
             //  Вычитаем превышение часов более 12
             float Mins = MinSecValue - ((float) Math.Round(MinSecValue / MinSecCycleBase) * MinSecCycleBase);
             float Result = (360.0f / MinSecCycleBase) * (Mins);
-            return (Result - 90.0f);
+            return new Angle (Result - 90.0f, AngleType.Degrees);
         }
 
 
@@ -161,7 +169,7 @@ namespace VectorClock
             {
                 bool IsHourLineMark = (M % 5 == 0);
 
-                Vector2D LineVector = Vector2D.UnitVectorFromAngleD( GetClockAngleM(M) );
+                Vector2D LineVector = Vector2D.UnitVectorFromAngle( GetClockAngleM(M) );
 
                 if (IsHourLineMark)
                 {
@@ -213,12 +221,36 @@ namespace VectorClock
                 this.Second   = N.Second;
                 this.Second2  = N.Second + (N.Millisecond / 1000.0f);
 
+                this.UpdateClockUserInputs();    
+
                 this.Text = $"{this.Hour,00:F3} : {this.Minute,00:F3} : {this.Second,00:F3}";
 
                 this.Invalidate();
                 this.Update();
             }
 
+        }
+
+        private void UpdateClockUserInputs ()
+        {
+            var InputValues = new float [5]
+            {
+                this.Hour,
+                this.Minute,
+                this.Second,
+                0,
+                0,
+            };
+
+            int I = 0;
+            foreach (NumericUpDown InputCtrl in ClockInputs) if (InputCtrl != null)
+            {
+                InputCtrl.ValueChanged -= NumericInput_ValueChanged;
+
+                InputCtrl.Value = (decimal) InputValues[I++];
+
+                InputCtrl.ValueChanged += NumericInput_ValueChanged;
+            }
         }
 
         private void ClockForm_Paint (object sender, PaintEventArgs e)
@@ -231,16 +263,18 @@ namespace VectorClock
             int CY = this.ClientRectangle.Height / 2; // HrsTrack.Bottom + (this.ClientRectangle.Height - HrsTrack.Bottom) / 2;
 
 
-            AllVectors[0] = Vector2D.UnitVectorFromAngleD( GetClockAngleM(this.AlarmTime) );
-            AllVectors[1] = Vector2D.UnitVectorFromAngleD( GetClockAngleM(this.Second2) );
-            AllVectors[2] = Vector2D.UnitVectorFromAngleD( GetClockAngleH(this.Hour) );
-            AllVectors[3] = Vector2D.UnitVectorFromAngleD( GetClockAngleM(this.Minute) );
-            AllVectors[4] = Vector2D.UnitVectorFromAngleD( GetClockAngleM(this.Second) );
+            AllVectors[0] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.AlarmTime) );
+            AllVectors[1] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.Second2) );
+            AllVectors[2] = Vector2D.UnitVectorFromAngle( GetClockAngleH(this.Hour) );
+            AllVectors[3] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.Minute) );
+            AllVectors[4] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.Second) );
 
             Vector2D HourVector = AllVectors[2];
             Vector2D MinVector  = AllVectors[3];
+            Vector2D SecVector  = AllVectors[4];
 
-            float AngleBetween_H_M = HourVector.GetAngleBetween(MinVector) * -1.0f;
+            Angle AngleBetween_H_M = new Angle(HourVector.GetAngleBetween2(MinVector).Radians * -1.0f, AngleType.Radians);
+            Angle AngleBetween_M_S = new Angle(MinVector.GetAngleBetween2(SecVector).Radians * -1.0f, AngleType.Radians);
 
             float PieSize = 150.0f;
 
@@ -270,8 +304,8 @@ namespace VectorClock
                     CY - PieSize,
                     2 * PieSize,
                     2 * PieSize,
-                    GetClockAngleH(this.Hour),
-                    MathUtils.RadToDeg(AngleBetween_H_M)
+                    GetClockAngleM(this.Minute).Degrees,
+                    AngleBetween_M_S.Degrees
                 );
             }
 
@@ -284,9 +318,41 @@ namespace VectorClock
                 CY - 150.0f,
                 2  * 150.0f,
                 2  * 150.0f,
-                GetClockAngleH(this.Hour),
-                MathUtils.RadToDeg(AngleBetween_H_M)
+                GetClockAngleM(this.Minute).Degrees,
+                AngleBetween_M_S.Degrees
             );
+
+            label1.Text = SecVector.Angle.Degrees.ToString();
+        }
+
+
+
+        private void NumericInput_ValueChanged (object aSender, EventArgs e)
+        {
+            ShowCurrentTimeCheckBox.Checked = false;
+
+            this.Hour       = (float) numericUpDown1.Value;
+            this.Minute     = (float) numericUpDown2.Value;
+            this.Second     = (float) numericUpDown3.Value;
+            this.Second2    = this.Second;
+
+            this.Invalidate();
+            this.Update();
+        }
+
+        private void LinkLabel1_LinkClicked (object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ShowCurrentTimeCheckBox.Checked = false;
+
+            this.Hour       = 0;
+            this.Minute     = 0;
+            this.Second     = 0;
+            this.Second2    = this.Second;
+
+            UpdateClockUserInputs();
+
+            this.Invalidate();
+            this.Update();
         }
     }
 }
