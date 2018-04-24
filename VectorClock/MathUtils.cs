@@ -43,7 +43,8 @@ namespace VectorClock
             get { return _Radians; }
             set
             {
-
+                _Radians = value;
+                _Degrees = RadToDeg(value);
             }
         }
 
@@ -52,7 +53,24 @@ namespace VectorClock
             get { return _Degrees; }
             set
             {
+                _Degrees = value;
+                _Radians = DegToRad(value);
+            }
+        }
 
+
+
+        public void Add (float aValue, AngleType aType)
+        {
+            if (aType == AngleType.Radians)
+            {
+                _Radians += aValue;
+                _Degrees = RadToDeg(_Radians);
+            }
+            else if (aType == AngleType.Degrees)
+            {
+                _Degrees += aValue;
+                _Radians = DegToRad(_Degrees);
             }
         }
 
@@ -73,5 +91,9 @@ namespace VectorClock
 
     class MathUtils
     {
+        public float ExtractSign (float Number)
+        {
+            return (Number < 0) ? -1 : +1;
+        }
     }
 }

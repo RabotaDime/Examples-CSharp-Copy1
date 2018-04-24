@@ -8,6 +8,32 @@ using System.Threading.Tasks;
 
 namespace VectorClock
 {
+    public struct Vector3D
+    {
+        public float A;
+        public float B;
+        public float C;
+
+
+
+        public static Vector3D operator * (Vector3D V1, Vector3D V2)
+        {
+            Vector3D First     = new Vector3D { A = V1.A, B = V1.B, C = 0 };
+            Vector3D Second    = new Vector3D { A = V2.A, B = V2.B, C = 0 };
+
+            Vector3D CrossProduct = new Vector3D
+            {
+                A = (First.B * Second.C) - (First.C * Second.B),
+                B = (First.C * Second.A) - (First.A * Second.C),
+                C = (First.A * Second.B) - (First.B * Second.A),
+            };
+
+            return CrossProduct;
+        }
+    }
+
+
+
     public struct Vector2D
     {
         public float A;
@@ -35,18 +61,38 @@ namespace VectorClock
             get { return (float) Math.Sqrt((A * A) + (B * B)); }
         }
 
+        public float LengthEx
+        {
+            get
+            {
+                float Result = (float) Math.Sqrt((A * A) + (B * B));
+                return (B < 0) ? -Result : +Result;
+            }
+        }
+
         public Angle Angle
         {
             get
             {
-                float AngleVal = this.GetAngleBetween(XAxis).Degrees;
+                float AngleVal = (float) Math.Atan2(B, A);
 
+                return new Angle(AngleVal, AngleType.Radians);
+            }
+        }
+
+        public Angle FullAngle
+        {
+            get
+            {
+                float AngleVal = (float) Math.Atan2(B, A);
+                Angle ResultAngle = new Angle(AngleVal, AngleType.Radians);
+                
                 //  Изменяем угол для нижних квадрантов (третьего (III) и четвертого (IV))
-                if (B < 0) AngleVal *= -1;
+                //  Переводим значение угла от -0.0 до -180.0  -->  +180.0 до +360.0
+                if (B < 0)
+                    ResultAngle.Add(360.0f, AngleType.Degrees);
 
-                //  Результатом будет угол в градусах от -180.0 до +180.0, в зависимости
-                //  от направления вектора. 
-                return new Angle(AngleVal, AngleType.Degrees);
+                return ResultAngle;
             }
         }
 
@@ -77,54 +123,113 @@ namespace VectorClock
 
 
 
-        public float GetCrossProduct (Vector2D aOtherVector)
+        public Vector2D UnitVector
         {
+            get
+            {
+                float Len = this.Length;
+
+                return new Vector2D
+                (
+                    A / Len,
+                    B / Len
+                );
+            }
+        }
+
+
+
+        public void Rotate (Angle aAngle)
+        {
+            float Ang = aAngle.Radians;
+
+            float A_Rotated = (float)( (A * Math.Cos(Ang)) - (B * Math.Sin(Ang)) );
+            float B_Rotated = (float)( (A * Math.Sin(Ang)) + (B * Math.Cos(Ang)) );
+
+            A = A_Rotated;
+            B = B_Rotated;
+        }
+
+
+
+        public float DotProduct (Vector2D aOtherVector)
+        {
+            //  Прямое перемножение компонентов вектора. 
+            return (this.A * aOtherVector.A) + (this.B * aOtherVector.B);
+        }
+
+        public float CrossProduct (Vector2D aOtherVector)
+        {
+            //  Крестообразное перемножение компонентов вектора. 
             return (this.A * aOtherVector.B) - (this.B * aOtherVector.A);
         }
 
 
 
-        public float GetDotProduct (Vector2D aOtherVector)
-        {
-            return (this.A * aOtherVector.A) + (this.B * aOtherVector.B);
-        }
-
-
-
-        public Angle GetAngleBetween (Vector2D aOtherVector)
+        public Angle AngleBetween1 (Vector2D aOtherVector)
         {
             float AngleVal = (float) Math.Acos
             (
-                this.GetDotProduct(aOtherVector) /
+                this.DotProduct(aOtherVector) /
                 (this.Length * aOtherVector.Length)
             );
 
             return new Angle(AngleVal, AngleType.Radians);
         }
 
-        public Angle GetAngleBetween2 (Vector2D aOtherVector)
+        public Angle AngleBetween2 (Vector2D aOtherVector)
         {
-            float AngleVal = (float) Math.Atan2
-            (
-                this.GetCrossProduct    (aOtherVector),
-                this.GetDotProduct      (aOtherVector)
-            );
+            float Cross  = this.CrossProduct  (aOtherVector);
+            float Dot    = this.DotProduct    (aOtherVector);
+
+            float AngleVal = (float) Math.Atan2(Cross, Dot);
+
+            return new Angle(AngleVal, AngleType.Radians);
+        }
+
+        public Angle AngleBetween3 (Vector2D aOtherVector)
+        {
+            float Angle1 = this         .FullAngle.Degrees;
+            float Angle2 = aOtherVector .FullAngle.Degrees;
+
+            float AngleVal = Angle1 - Angle2;
 
             return new Angle(AngleVal, AngleType.Radians);
         }
 
 
 
-/*
-        public float GetAngleBetween2 (Vector2D aOtherVector)
+        public Angle AngleBetween (Vector2D aOtherVector)
         {
-            return 0;// this.Length * aOtherVector.Length * Math.Sin()
-            return (float) Math.Atan2
-            (
-                this.GetCrossProduct(aOtherVector) /
-                (this.Length * aOtherVector.Length)
-            );
+            if ((this.A == aOtherVector.A) && (this.B == aOtherVector.B))
+                return new Angle (0, AngleType.Degrees);
+            else if ((this.A == -aOtherVector.A) && (this.B == -aOtherVector.B))
+                return new Angle (180, AngleType.Degrees);
+            else
+            {
+                float BaseAngle = this.Angle.Radians;
+
+                //Vector2D AVec = this;
+                Vector2D BVec = aOtherVector;
+
+                Angle RotAngle = new Angle ( BaseAngle * -1.0f , AngleType.Radians);
+                //AVec.Rotate(RotAngle);
+                BVec.Rotate(RotAngle);
+
+                return BVec.Angle;
+            }
         }
-*/
+
+
+
+        public static Vector2D operator + (Vector2D V1, Vector2D V2)
+        {
+            return new Vector2D (V1.A + V2.A, V1.B + V2.B);
+        }
+
+        public static Vector2D operator - (Vector2D V1, Vector2D V2)
+        {
+            return new Vector2D (V1.A - V2.A, V1.B - V2.B);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,25 +14,101 @@ namespace VectorClock
 {
     public partial class ClockForm : Form
     {
-        public float AlarmTime = 0;
-        public float Hour = 0;
-        public float Minute = 0;
-        public float Second = 0;
-        public float Second2 = 0;
-
-        public ClockVisualStyle ClockStyle = new ClockVisualStyle ();
-
-        public ClockVisualStyle.ClockArrow[] AllArrows = new ClockVisualStyle.ClockArrow [5];
-        public Vector2D[] AllVectors = new Vector2D [5]
+        public class Arrows : IEnumerable
         {
-            new Vector2D { },
-            new Vector2D { },
-            new Vector2D { },
-            new Vector2D { },
-            new Vector2D { },
-        };
+            public enum ArrowIndex : int
+            {
+                Alarm       = 0,
+                Hour        = 1,
+                Minute      = 2,
+            }
+
+            public class Arrow
+            {
+                public Vector2D Vector;
+                public ClockVisualStyle.ClockArrow VisualStyle;
+
+                public float        ClockValue;
+                public ClockCycle   ClockCycle;
+
+                public Arrow (ClockCycle aCycle)
+                {
+                    Vector = new Vector2D (0, -1);
+                    ClockValue = 0;
+                    ClockCycle = aCycle;
+                }
+            }
+
+            private Arrow[] AllArrows = new Arrow [8] /*
+            {
+                new Arrow (ClockCycle.Minutes) { VisualStyle = new ClockVisualStyle.ClockArrow {
+                }},
+            }*/;
+
+            public Arrows (ClockVisualStyle BaseStyle)
+            {
+                ClockStyle = BaseStyle;
+
+                for (int I = 0; I < BaseStyle.Arrows.All.Length; I++)
+                {
+                    AllArrows[I] = new Arrow(ClockCycle.None)
+                    {
+                        VisualStyle = BaseStyle.Arrows.All[I]
+                    };
+                }
+
+                Alarm       .ClockCycle = ClockCycle.Minutes;
+                Hour        .ClockCycle = ClockCycle.Hours;
+                Minute      .ClockCycle = ClockCycle.Minutes;
+                Second      .ClockCycle = ClockCycle.Seconds;
+                SecGhost    .ClockCycle = ClockCycle.Seconds;
+            }
+
+            public ClockVisualStyle ClockStyle;
+
+            public Arrow SecGhost   { get { return AllArrows[0]; } }
+            public Arrow Alarm      { get { return AllArrows[1]; } }
+            public Arrow Hour       { get { return AllArrows[2]; } }
+            public Arrow Minute     { get { return AllArrows[3]; } }
+            public Arrow Second     { get { return AllArrows[4]; } }
+
+            public Arrow User1      { get { return AllArrows[5]; } }
+            public Arrow User2      { get { return AllArrows[6]; } }
+            public Arrow User3      { get { return AllArrows[7]; } }
+
+            public Arrow this [int Index]
+            {
+                get { return AllArrows[Index]; }
+            }
+
+            public IEnumerator GetEnumerator ()
+            {
+                return AllArrows.GetEnumerator();
+            }
+
+            public void UpdateVectors ()
+            {
+                foreach (Arrow A in AllArrows)
+                {
+                    if (A.ClockCycle != ClockCycle.None)
+                    {
+                        A.Vector = Vector2D.UnitVectorFromAngle
+                        (
+                            GetClockAngle(A.ClockValue, A.ClockCycle)
+                        );
+                    }
+                }
+            }
+        }
+
+        public Arrows AllArrows = new Arrows (new ClockVisualStyle ());
 
         public NumericUpDown[] ClockInputs = new NumericUpDown [4];
+
+        public bool MouseCaptured = false;
+
+        public float DebugPieStartAngle     = 0;
+        public float DebugPieRelativeAngle  = 0;
 
 
 
@@ -39,12 +116,9 @@ namespace VectorClock
         {
             InitializeComponent();
 
-            for (int I = 0; I < AllArrows.Length; I++)
-                AllArrows[I] = ClockStyle.Arrows.All[I];
-
-            ClockStyle.Numbers.SecondaryMinutesFont = this.MinFontLabel.Font;
-            ClockStyle.Numbers.PrimaryMinutesFont   = this.BMinFontLabel.Font;
-            ClockStyle.Numbers.HoursFont            = this.HrsFontLabel.Font;
+            AllArrows.ClockStyle.Numbers.SecondaryMinutesFont = this.MinFontLabel.Font;
+            AllArrows.ClockStyle.Numbers.PrimaryMinutesFont   = this.BMinFontLabel.Font;
+            AllArrows.ClockStyle.Numbers.HoursFont            = this.HrsFontLabel.Font;
 
             ClockInputs[0] = this.numericUpDown1;
             ClockInputs[1] = this.numericUpDown2;
@@ -55,23 +129,26 @@ namespace VectorClock
 
 
 
-        public const float HoursCycleBase = 12.0f;
-        public const float MinSecCycleBase = 60.0f;
-
-        public static Angle GetClockAngleH (float HoursValue)
+        public enum ClockCycle : int
         {
-            //  Вычитаем превышение часов более 12
-            float Hours = HoursValue - ((float) Math.Round(HoursValue / HoursCycleBase) * HoursCycleBase);
-            float Result = (360.0f / HoursCycleBase) * (Hours);
-            return new Angle (Result - 90.0f, AngleType.Degrees);
+            None = 0,
+            Hours = 12,
+            Minutes = 60,
+            Seconds = 60,
         }
 
-        public static Angle GetClockAngleM (float MinSecValue)
+        public static Angle GetClockAngle (float aClockValue, ClockCycle aCycle, float aMod = -90.0f)
         {
-            //  Вычитаем превышение часов более 12
-            float Mins = MinSecValue - ((float) Math.Round(MinSecValue / MinSecCycleBase) * MinSecCycleBase);
-            float Result = (360.0f / MinSecCycleBase) * (Mins);
-            return new Angle (Result - 90.0f, AngleType.Degrees);
+            if (aCycle == ClockCycle.None) return new Angle (aClockValue, AngleType.Undefined);
+
+            float CycleBase = (int) aCycle;
+
+            //  Вычитаем превышение часов (более 12) или минут (более 60). 
+            aClockValue = aClockValue - ((float) Math.Round(aClockValue / CycleBase) * CycleBase);
+
+            float Result = (360.0f / CycleBase) * aClockValue;
+            Result += aMod;
+            return new Angle (Result, AngleType.Degrees);
         }
 
 
@@ -169,17 +246,17 @@ namespace VectorClock
             {
                 bool IsHourLineMark = (M % 5 == 0);
 
-                Vector2D LineVector = Vector2D.UnitVectorFromAngle( GetClockAngleM(M) );
+                Vector2D LineVector = Vector2D.UnitVectorFromAngle( GetClockAngle(M, ClockCycle.Minutes) );
 
                 if (IsHourLineMark)
                 {
-                    RenderClockMark(aCanvas, aBaseX, aBaseY, LineVector, ClockStyle.LineMarks.HourPosSize,
-                        ClockStyle.LineMarks.Hours, ClockStyle);
+                    RenderClockMark(aCanvas, aBaseX, aBaseY, LineVector, aStyle.LineMarks.HourPosSize,
+                        aStyle.LineMarks.Hours, aStyle);
                 }
                 else
                 {
-                    RenderClockMark(aCanvas, aBaseX, aBaseY, LineVector, ClockStyle.LineMarks.MinPosSize,
-                        ClockStyle.LineMarks.Minutes, ClockStyle);
+                    RenderClockMark(aCanvas, aBaseX, aBaseY, LineVector, aStyle.LineMarks.MinPosSize,
+                        aStyle.LineMarks.Minutes, aStyle);
                 }
 
                 RenderClockLabel(aCanvas, M.ToString(), aBaseX, aBaseY, LineVector,
@@ -202,9 +279,16 @@ namespace VectorClock
                 }
             }
 
-            for (int N = 0; N < AllArrows.Length; N++)
+            foreach (Arrows.Arrow A in AllArrows)
             {
-                RenderClockArrow(aCanvas, aBaseX, aBaseY, AllVectors[N], AllArrows[N], ClockStyle);
+                if (RadioBtn_TestVectors.Checked && (A.ClockCycle == ClockCycle.None))
+                {
+                    RenderClockArrow(aCanvas, aBaseX, aBaseY, A.Vector, A.VisualStyle, aStyle);
+                }
+                else if ((!RadioBtn_TestVectors.Checked) && (A.ClockCycle != ClockCycle.None))
+                {
+                    RenderClockArrow(aCanvas, aBaseX, aBaseY, A.Vector, A.VisualStyle, aStyle);
+                }
             }
         }
 
@@ -212,32 +296,36 @@ namespace VectorClock
 
         private void TimerObject_Tick (object sender, EventArgs e)
         {
-            if (ShowCurrentTimeCheckBox.Checked)
+            if (RadioBtn_CurTime.Checked)
             {
                 DateTime N = DateTime.Now;
 
-                this.Hour     = N.Hour + (N.Minute / 60.0f);
-                this.Minute   = N.Minute + (N.Second / 60.0f);
-                this.Second   = N.Second;
-                this.Second2  = N.Second + (N.Millisecond / 1000.0f);
+                AllArrows.Hour      .ClockValue = N.Hour + (N.Minute / 60.0f);
+                AllArrows.Minute    .ClockValue = N.Minute + (N.Second / 60.0f);
+                AllArrows.Second    .ClockValue = N.Second;
+                AllArrows.SecGhost  .ClockValue = N.Second + (N.Millisecond / 1000.0f);
 
                 this.UpdateClockUserInputs();    
 
-                this.Text = $"{this.Hour,00:F3} : {this.Minute,00:F3} : {this.Second,00:F3}";
-
-                this.Invalidate();
-                this.Update();
+                //this.Text = $"{this.Hour,00:F3} : {this.Minute,00:F3} : {this.Second,00:F3}";
             }
 
+            if (! RadioBtn_TestVectors.Checked)
+            {
+                DebugPieStartAngle      = AllArrows.Minute.Vector.FullAngle.Degrees;
+                DebugPieRelativeAngle   = AllArrows.Minute.Vector.AngleBetween(AllArrows.SecGhost.Vector).Degrees;
+            }
+
+            this.Repaint();
         }
 
         private void UpdateClockUserInputs ()
         {
             var InputValues = new float [5]
             {
-                this.Hour,
-                this.Minute,
-                this.Second,
+                AllArrows.Hour      .ClockValue,
+                AllArrows.Minute    .ClockValue,
+                AllArrows.Second    .ClockValue,
                 0,
                 0,
             };
@@ -259,22 +347,18 @@ namespace VectorClock
 
             G.SmoothingMode = SmoothingMode.HighQuality;
 
-            int CX = this.ClientRectangle.Width / 2;
-            int CY = this.ClientRectangle.Height / 2; // HrsTrack.Bottom + (this.ClientRectangle.Height - HrsTrack.Bottom) / 2;
+            Vector2D Center = this.ClockCenter;
+            float CX = Center.A;
+            float CY = Center.B;
 
+            AllArrows.UpdateVectors();
 
-            AllVectors[0] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.AlarmTime) );
-            AllVectors[1] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.Second2) );
-            AllVectors[2] = Vector2D.UnitVectorFromAngle( GetClockAngleH(this.Hour) );
-            AllVectors[3] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.Minute) );
-            AllVectors[4] = Vector2D.UnitVectorFromAngle( GetClockAngleM(this.Second) );
+            Vector2D HourVector = AllArrows.Hour.Vector;
+            Vector2D MinVector  = AllArrows.Minute.Vector;
+            Vector2D SecVector  = AllArrows.Second.Vector;
 
-            Vector2D HourVector = AllVectors[2];
-            Vector2D MinVector  = AllVectors[3];
-            Vector2D SecVector  = AllVectors[4];
-
-            Angle AngleBetween_H_M = new Angle(HourVector.GetAngleBetween2(MinVector).Radians * -1.0f, AngleType.Radians);
-            Angle AngleBetween_M_S = new Angle(MinVector.GetAngleBetween2(SecVector).Radians * -1.0f, AngleType.Radians);
+            //Angle AngleBetween_H_M = new Angle(HourVector.AngleBetween2(MinVector).Radians * -1.0f, AngleType.Radians);
+            //Angle AngleBetween_M_S = new Angle(MinVector.AngleBetween2(SecVector).Radians * -1.0f, AngleType.Radians);
 
             float PieSize = 150.0f;
 
@@ -304,12 +388,12 @@ namespace VectorClock
                     CY - PieSize,
                     2 * PieSize,
                     2 * PieSize,
-                    GetClockAngleM(this.Minute).Degrees,
-                    AngleBetween_M_S.Degrees
+                    DebugPieStartAngle, //GetClockAngle(AllArrows.User1.ClockValue, ClockCycle.Minutes).Degrees,
+                    DebugPieRelativeAngle // AngleBetween_M_S.Degrees
                 );
             }
 
-            RenderClock(G, CX, CY, ClockStyle);
+            RenderClock(G, CX, CY, AllArrows.ClockStyle);
 
             G.DrawArc
             (
@@ -318,41 +402,146 @@ namespace VectorClock
                 CY - 150.0f,
                 2  * 150.0f,
                 2  * 150.0f,
-                GetClockAngleM(this.Minute).Degrees,
-                AngleBetween_M_S.Degrees
+                DebugPieStartAngle, //GetClockAngle(AllArrows.User1.ClockValue, ClockCycle.Minutes).Degrees,
+                DebugPieRelativeAngle // AngleBetween_M_S.Degrees
             );
 
-            label1.Text = SecVector.Angle.Degrees.ToString();
+
+            Vector2D AVec = AllArrows.User1.Vector;
+            Vector2D BVec = AllArrows.User2.Vector;
+            if (! RadioBtn_TestVectors.Checked)
+            {
+                AVec = AllArrows.Minute.Vector;
+                BVec = AllArrows.SecGhost.Vector;
+            }
+
+            label1.Text =
+                $"UsrArr1.fang = {AllArrows.User1.Vector.FullAngle.Degrees}\n" +
+                $"UsrArr2.fang = {AllArrows.User2.Vector.FullAngle.Degrees}\n" +
+                $"Angle = {AVec.AngleBetween(BVec).Degrees}";
         }
 
 
 
         private void NumericInput_ValueChanged (object aSender, EventArgs e)
         {
-            ShowCurrentTimeCheckBox.Checked = false;
+            RadioBtn_UserTime.Checked = true;
 
-            this.Hour       = (float) numericUpDown1.Value;
-            this.Minute     = (float) numericUpDown2.Value;
-            this.Second     = (float) numericUpDown3.Value;
-            this.Second2    = this.Second;
+            AllArrows.Hour      .ClockValue = (float) numericUpDown1.Value;
+            AllArrows.Minute    .ClockValue = (float) numericUpDown2.Value;
+            AllArrows.Second    .ClockValue = (float) numericUpDown3.Value;
+            AllArrows.SecGhost  .ClockValue = AllArrows.Second.ClockValue;
 
-            this.Invalidate();
-            this.Update();
+            this.Repaint();
         }
 
         private void LinkLabel1_LinkClicked (object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ShowCurrentTimeCheckBox.Checked = false;
+            RadioBtn_UserTime.Checked = true;
 
-            this.Hour       = 0;
-            this.Minute     = 0;
-            this.Second     = 0;
-            this.Second2    = this.Second;
+            AllArrows.Hour      .ClockValue = 0;
+            AllArrows.Minute    .ClockValue = 0;
+            AllArrows.Second    .ClockValue = 0;
+            AllArrows.SecGhost  .ClockValue = AllArrows.Second.ClockValue;
 
             UpdateClockUserInputs();
 
+            this.Repaint();
+        }
+
+        public void Repaint ()
+        {
             this.Invalidate();
             this.Update();
+        }
+
+
+
+        public Vector2D ClockCenter
+        {
+            get
+            {
+                // HrsTrack.Bottom + (this.ClientRectangle.Height - HrsTrack.Bottom) / 2;
+
+                return new Vector2D
+                {
+                    A = (this.ClientRectangle.Width  / 2),
+                    B = (this.ClientRectangle.Height / 2),
+                };
+            }
+        }
+
+        public Vector2D CreateMouseVector (int aX, int aY)
+        {
+            Vector2D MouseVector;
+            
+            Vector2D Center = this.ClockCenter;
+            float CX = Center.A;
+            float CY = Center.B;
+
+            MouseVector.A = aX;
+            MouseVector.B = aY;
+
+            MouseVector -= Center;
+
+            MouseVector = MouseVector.UnitVector;
+
+            return MouseVector;
+        }
+
+        public void EditClockByMouse (int aX, int aY, MouseButtons aMouseButtons)
+        {
+            this.RadioBtn_TestVectors.Checked = true;
+
+            Vector2D Mouse = CreateMouseVector(aX, aY);
+
+            float ClockValue = Mouse.Angle.Degrees;
+
+            if (aMouseButtons.HasFlag(MouseButtons.Left))
+                AllArrows.User1.Vector = Mouse;
+
+            if (aMouseButtons.HasFlag(MouseButtons.Right))
+                AllArrows.User2.Vector = Mouse;
+
+            if (aMouseButtons.HasFlag(MouseButtons.Middle))
+                AllArrows.User3.Vector = Mouse;
+
+            DebugPieStartAngle      = AllArrows.User1.Vector.FullAngle.Degrees;
+            DebugPieRelativeAngle   = AllArrows.User1.Vector.AngleBetween(AllArrows.User2.Vector).Degrees;
+
+            this.Repaint();
+        }
+
+        private void ClockForm_MouseDown (object sender, MouseEventArgs e)
+        {
+            MouseCaptured = true;
+            EditClockByMouse(e.X, e.Y, e.Button);
+        }
+
+        private void ClockForm_MouseMove (object sender, MouseEventArgs e)
+        {
+            if (MouseCaptured)
+            {
+                EditClockByMouse(e.X, e.Y, e.Button);
+            }
+        }
+
+        private void ClockForm_MouseUp (object sender, MouseEventArgs e)
+        {
+            MouseCaptured = false;
+            EditClockByMouse(e.X, e.Y, e.Button);
+        }
+
+        private void RadioBtn_TestVectors_MouseDown (object sender, MouseEventArgs e)
+        {
+        }
+
+        private void RadioBtn_TestVectors_CheckedChanged (object sender, EventArgs e)
+        {
+            DebugPieStartAngle      = AllArrows.User1.Vector.FullAngle.Degrees;
+            DebugPieRelativeAngle   = AllArrows.User1.Vector.AngleBetween(AllArrows.User2.Vector).Degrees;
+
+            this.Repaint();
         }
     }
 }

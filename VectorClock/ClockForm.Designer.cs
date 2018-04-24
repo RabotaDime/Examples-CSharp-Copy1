@@ -32,13 +32,15 @@
             this.HrsFontLabel = new System.Windows.Forms.Label();
             this.BMinFontLabel = new System.Windows.Forms.Label();
             this.MinFontLabel = new System.Windows.Forms.Label();
-            this.ShowCurrentTimeCheckBox = new System.Windows.Forms.CheckBox();
             this.TimerObject = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.RadioBtn_CurTime = new System.Windows.Forms.RadioButton();
+            this.RadioBtn_UserTime = new System.Windows.Forms.RadioButton();
+            this.RadioBtn_TestVectors = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -78,20 +80,6 @@
             this.MinFontLabel.Text = "Font: Normal Minutes";
             this.MinFontLabel.Visible = false;
             // 
-            // ShowCurrentTimeCheckBox
-            // 
-            this.ShowCurrentTimeCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ShowCurrentTimeCheckBox.AutoSize = true;
-            this.ShowCurrentTimeCheckBox.Checked = true;
-            this.ShowCurrentTimeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ShowCurrentTimeCheckBox.Location = new System.Drawing.Point(486, 8);
-            this.ShowCurrentTimeCheckBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ShowCurrentTimeCheckBox.Name = "ShowCurrentTimeCheckBox";
-            this.ShowCurrentTimeCheckBox.Size = new System.Drawing.Size(129, 25);
-            this.ShowCurrentTimeCheckBox.TabIndex = 6;
-            this.ShowCurrentTimeCheckBox.Text = "Current Time";
-            this.ShowCurrentTimeCheckBox.UseVisualStyleBackColor = true;
-            // 
             // TimerObject
             // 
             this.TimerObject.Enabled = true;
@@ -101,9 +89,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(14, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 21);
+            this.label1.Size = new System.Drawing.Size(44, 18);
             this.label1.TabIndex = 7;
             this.label1.Text = "label1";
             // 
@@ -183,17 +173,62 @@
             this.linkLabel1.Text = "Reset";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1_LinkClicked);
             // 
+            // RadioBtn_CurTime
+            // 
+            this.RadioBtn_CurTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RadioBtn_CurTime.AutoSize = true;
+            this.RadioBtn_CurTime.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.RadioBtn_CurTime.Checked = true;
+            this.RadioBtn_CurTime.Location = new System.Drawing.Point(482, 8);
+            this.RadioBtn_CurTime.Name = "RadioBtn_CurTime";
+            this.RadioBtn_CurTime.Size = new System.Drawing.Size(128, 25);
+            this.RadioBtn_CurTime.TabIndex = 11;
+            this.RadioBtn_CurTime.TabStop = true;
+            this.RadioBtn_CurTime.Text = "Current Time";
+            this.RadioBtn_CurTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.RadioBtn_CurTime.UseVisualStyleBackColor = true;
+            // 
+            // RadioBtn_UserTime
+            // 
+            this.RadioBtn_UserTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RadioBtn_UserTime.AutoSize = true;
+            this.RadioBtn_UserTime.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.RadioBtn_UserTime.Location = new System.Drawing.Point(481, 30);
+            this.RadioBtn_UserTime.Name = "RadioBtn_UserTime";
+            this.RadioBtn_UserTime.Size = new System.Drawing.Size(129, 25);
+            this.RadioBtn_UserTime.TabIndex = 11;
+            this.RadioBtn_UserTime.Text = "Custom Time";
+            this.RadioBtn_UserTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.RadioBtn_UserTime.UseVisualStyleBackColor = true;
+            // 
+            // RadioBtn_TestVectors
+            // 
+            this.RadioBtn_TestVectors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RadioBtn_TestVectors.AutoSize = true;
+            this.RadioBtn_TestVectors.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.RadioBtn_TestVectors.Location = new System.Drawing.Point(485, 52);
+            this.RadioBtn_TestVectors.Name = "RadioBtn_TestVectors";
+            this.RadioBtn_TestVectors.Size = new System.Drawing.Size(125, 25);
+            this.RadioBtn_TestVectors.TabIndex = 11;
+            this.RadioBtn_TestVectors.Text = "Test Vectors";
+            this.RadioBtn_TestVectors.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.RadioBtn_TestVectors.UseVisualStyleBackColor = true;
+            this.RadioBtn_TestVectors.CheckedChanged += new System.EventHandler(this.RadioBtn_TestVectors_CheckedChanged);
+            this.RadioBtn_TestVectors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RadioBtn_TestVectors_MouseDown);
+            // 
             // ClockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 593);
+            this.Controls.Add(this.RadioBtn_TestVectors);
+            this.Controls.Add(this.RadioBtn_UserTime);
+            this.Controls.Add(this.RadioBtn_CurTime);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.ShowCurrentTimeCheckBox);
             this.Controls.Add(this.HrsFontLabel);
             this.Controls.Add(this.BMinFontLabel);
             this.Controls.Add(this.MinFontLabel);
@@ -201,8 +236,11 @@
             this.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ClockForm";
-            this.Text = "Form1";
+            this.Text = "Angle Between Clock Arrows";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ClockForm_Paint);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ClockForm_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ClockForm_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ClockForm_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
@@ -216,13 +254,15 @@
         private System.Windows.Forms.Label HrsFontLabel;
         private System.Windows.Forms.Label BMinFontLabel;
         private System.Windows.Forms.Label MinFontLabel;
-        private System.Windows.Forms.CheckBox ShowCurrentTimeCheckBox;
         private System.Windows.Forms.Timer TimerObject;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.RadioButton RadioBtn_CurTime;
+        private System.Windows.Forms.RadioButton RadioBtn_UserTime;
+        private System.Windows.Forms.RadioButton RadioBtn_TestVectors;
     }
 }
 

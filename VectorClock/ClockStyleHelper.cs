@@ -52,18 +52,26 @@ namespace VectorClock
             public ClockArrow Hour      = new ClockArrow (Color.DodgerBlue  , 6.0f, 14.5f, 0.70f, 0.15f);
             public ClockArrow Minute    = new ClockArrow (Color.Orange      , 4.0f,  9.5f, 0.95f, 0.15f);
             public ClockArrow Second    = new ClockArrow (Color.Red         , 2.0f,  7.5f, 0.95f, 0.15f);
-            public ClockArrow Second2   = new ClockArrow (Color.FromArgb(64, Color.DimGray), 1.0f,  0.0f, 0.95f, 0.00f);
+            public ClockArrow SecGhost  = new ClockArrow (Color.FromArgb(64, Color.DimGray), 1.0f,  0.0f, 0.95f, 0.00f);
             public ClockArrow Alarm     = new ClockArrow (Color.DarkGray    , 5.0f,  0.0f, 0.55f, 0.15f);
 
-            public ClockArrow[] All     = new ClockArrow [5];
+            public ClockArrow UserArr1  = new ClockArrow (Color.Aquamarine  , 3.0f,  0.0f, 0.75f, 0.15f);
+            public ClockArrow UserArr2  = new ClockArrow (Color.Fuchsia     , 3.0f,  0.0f, 0.75f, 0.15f);
+            public ClockArrow UserArr3  = new ClockArrow (Color.Black       , 1.0f,  0.0f, 0.50f, 0.15f);
+
+            public ClockArrow[] All     = new ClockArrow [8];
 
             public ArrowsSet ()
             {
-                All[0] = Alarm;
-                All[1] = Second2;
+                All[0] = SecGhost;
+                All[1] = Alarm;
                 All[2] = Hour;
                 All[3] = Minute;
                 All[4] = Second;
+
+                All[5] = UserArr1;
+                All[6] = UserArr2;
+                All[7] = UserArr3;
             }
         }
 
