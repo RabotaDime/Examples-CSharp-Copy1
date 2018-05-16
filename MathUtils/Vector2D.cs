@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 
-namespace VectorClock
+namespace My.MathUtils
 {
     public struct Vector3D
     {
@@ -80,7 +80,7 @@ namespace VectorClock
             }
         }
 
-        public Angle FullAngle
+        public Angle AbsAngle
         {
             get
             {
@@ -189,8 +189,8 @@ namespace VectorClock
 
         public Angle AngleBetween3 (Vector2D aOtherVector)
         {
-            float Angle1 = this         .FullAngle.Degrees;
-            float Angle2 = aOtherVector .FullAngle.Degrees;
+            float Angle1 = this         .AbsAngle.Degrees;
+            float Angle2 = aOtherVector .AbsAngle.Degrees;
 
             float AngleVal = Angle1 - Angle2;
 

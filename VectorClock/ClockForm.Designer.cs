@@ -41,6 +41,9 @@
             this.RadioBtn_CurTime = new System.Windows.Forms.RadioButton();
             this.RadioBtn_UserTime = new System.Windows.Forms.RadioButton();
             this.RadioBtn_TestVectors = new System.Windows.Forms.RadioButton();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -50,7 +53,7 @@
             // 
             this.HrsFontLabel.AutoSize = true;
             this.HrsFontLabel.Font = new System.Drawing.Font("Tahoma", 22.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.HrsFontLabel.Location = new System.Drawing.Point(11, 275);
+            this.HrsFontLabel.Location = new System.Drawing.Point(12, 276);
             this.HrsFontLabel.Name = "HrsFontLabel";
             this.HrsFontLabel.Size = new System.Drawing.Size(219, 46);
             this.HrsFontLabel.TabIndex = 5;
@@ -73,7 +76,7 @@
             this.MinFontLabel.AutoSize = true;
             this.MinFontLabel.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MinFontLabel.ForeColor = System.Drawing.Color.DimGray;
-            this.MinFontLabel.Location = new System.Drawing.Point(16, 225);
+            this.MinFontLabel.Location = new System.Drawing.Point(15, 224);
             this.MinFontLabel.Name = "MinFontLabel";
             this.MinFontLabel.Size = new System.Drawing.Size(138, 17);
             this.MinFontLabel.TabIndex = 3;
@@ -149,7 +152,7 @@
             this.numericUpDown3.DecimalPlaces = 3;
             this.numericUpDown3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.numericUpDown3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDown3.Location = new System.Drawing.Point(12, 548);
+            this.numericUpDown3.Location = new System.Drawing.Point(12, 549);
             this.numericUpDown3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             60,
@@ -164,6 +167,7 @@
             // 
             // linkLabel1
             // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(8, 461);
             this.linkLabel1.Name = "linkLabel1";
@@ -179,7 +183,7 @@
             this.RadioBtn_CurTime.AutoSize = true;
             this.RadioBtn_CurTime.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.RadioBtn_CurTime.Checked = true;
-            this.RadioBtn_CurTime.Location = new System.Drawing.Point(482, 8);
+            this.RadioBtn_CurTime.Location = new System.Drawing.Point(483, 8);
             this.RadioBtn_CurTime.Name = "RadioBtn_CurTime";
             this.RadioBtn_CurTime.Size = new System.Drawing.Size(128, 25);
             this.RadioBtn_CurTime.TabIndex = 11;
@@ -216,11 +220,54 @@
             this.RadioBtn_TestVectors.CheckedChanged += new System.EventHandler(this.RadioBtn_TestVectors_CheckedChanged);
             this.RadioBtn_TestVectors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RadioBtn_TestVectors_MouseDown);
             // 
+            // listBox1
+            // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 15;
+            this.listBox1.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4"});
+            this.listBox1.Location = new System.Drawing.Point(305, 180);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(502, 214);
+            this.listBox1.TabIndex = 12;
+            this.listBox1.Visible = false;
+            // 
+            // listBox2
+            // 
+            this.listBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox2.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 15;
+            this.listBox2.Location = new System.Drawing.Point(351, 135);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(502, 169);
+            this.listBox2.TabIndex = 13;
+            this.listBox2.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.ForeColor = System.Drawing.Color.DimGray;
+            this.label2.Location = new System.Drawing.Point(15, 562);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(598, 22);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Test Vectors Manipulation: Left, Right, Middle mouse buttons in any order";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // ClockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 593);
+            this.Controls.Add(this.listBox2);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.RadioBtn_TestVectors);
             this.Controls.Add(this.RadioBtn_UserTime);
             this.Controls.Add(this.RadioBtn_CurTime);
@@ -232,6 +279,7 @@
             this.Controls.Add(this.HrsFontLabel);
             this.Controls.Add(this.BMinFontLabel);
             this.Controls.Add(this.MinFontLabel);
+            this.Controls.Add(this.label2);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -263,6 +311,9 @@
         private System.Windows.Forms.RadioButton RadioBtn_CurTime;
         private System.Windows.Forms.RadioButton RadioBtn_UserTime;
         private System.Windows.Forms.RadioButton RadioBtn_TestVectors;
+        private System.Windows.Forms.ListBox listBox1;
+        public System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.Label label2;
     }
 }
 

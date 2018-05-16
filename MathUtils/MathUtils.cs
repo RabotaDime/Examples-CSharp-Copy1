@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VectorClock
+
+
+namespace My.MathUtils
 {
     public enum AngleType
     {
@@ -74,6 +76,15 @@ namespace VectorClock
             }
         }
 
+        public Angle Mirror { get 
+        {
+            return new Angle ()
+            {
+                _Degrees = -this._Degrees,
+                _Radians = -this._Radians,
+            };
+        }}
+
 
 
         public static float DegToRad (float aDegrees)
@@ -84,6 +95,13 @@ namespace VectorClock
         public static float RadToDeg (float aRadians)
         {
             return (float) (aRadians * (180 / Math.PI));
+        }
+
+
+
+        public override string ToString ()
+        {
+            return $"{_Degrees}° ({_Radians} rad)";
         }
     }
 

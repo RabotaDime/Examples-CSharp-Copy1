@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using My.MathUtils;
+
+
 
 namespace VectorClock
 {
@@ -62,6 +65,10 @@ namespace VectorClock
                 Minute      .ClockCycle = ClockCycle.Minutes;
                 Second      .ClockCycle = ClockCycle.Seconds;
                 SecGhost    .ClockCycle = ClockCycle.Seconds;
+
+                User1.Vector.Rotate(new Angle(30, AngleType.Degrees));
+                User2.Vector.Rotate(new Angle(120, AngleType.Degrees));
+                //User3.Vector.Rotate(new Angle(-90, AngleType.Degrees));
             }
 
             public ClockVisualStyle ClockStyle;
@@ -105,8 +112,6 @@ namespace VectorClock
 
         public NumericUpDown[] ClockInputs = new NumericUpDown [4];
 
-        public bool MouseCaptured = false;
-
         public float DebugPieStartAngle     = 0;
         public float DebugPieRelativeAngle  = 0;
 
@@ -115,6 +120,8 @@ namespace VectorClock
         public ClockForm ()
         {
             InitializeComponent();
+
+            VectorManipulator = new CManipulator (this);
 
             AllArrows.ClockStyle.Numbers.SecondaryMinutesFont = this.MinFontLabel.Font;
             AllArrows.ClockStyle.Numbers.PrimaryMinutesFont   = this.BMinFontLabel.Font;
@@ -312,11 +319,13 @@ namespace VectorClock
 
             if (! RadioBtn_TestVectors.Checked)
             {
-                DebugPieStartAngle      = AllArrows.Minute.Vector.FullAngle.Degrees;
+                DebugPieStartAngle      = AllArrows.Minute.Vector.AbsAngle.Degrees;
                 DebugPieRelativeAngle   = AllArrows.Minute.Vector.AngleBetween(AllArrows.SecGhost.Vector).Degrees;
             }
 
             this.Repaint();
+
+            VectorManipulator.Machine.PrintDebugInfo(listBox2);
         }
 
         private void UpdateClockUserInputs ()
@@ -416,8 +425,10 @@ namespace VectorClock
             }
 
             label1.Text =
-                $"UsrArr1.fang = {AllArrows.User1.Vector.FullAngle.Degrees}\n" +
-                $"UsrArr2.fang = {AllArrows.User2.Vector.FullAngle.Degrees}\n" +
+                $"UsrArr1.fang = {AllArrows.User1.Vector.AbsAngle.Degrees} " +
+                    $"({AllArrows.User1.Vector.Angle.Degrees})\n" +
+                $"UsrArr2.fang = {AllArrows.User2.Vector.AbsAngle.Degrees} " +
+                    $"({AllArrows.User2.Vector.Angle.Degrees})\n" +
                 $"Angle = {AVec.AngleBetween(BVec).Degrees}";
         }
 
@@ -488,49 +499,109 @@ namespace VectorClock
 
             return MouseVector;
         }
-
+/*
         public void EditClockByMouse (int aX, int aY, MouseButtons aMouseButtons)
         {
-            this.RadioBtn_TestVectors.Checked = true;
-
             Vector2D Mouse = CreateMouseVector(aX, aY);
 
             float ClockValue = Mouse.Angle.Degrees;
 
-            if (aMouseButtons.HasFlag(MouseButtons.Left))
-                AllArrows.User1.Vector = Mouse;
+            Angle PrimaryArrowDeltaAngle;
+            var MouseButtonToArrowLink = new Dictionary<MouseButtons, Arrows.Arrow>
+            {
+                [MouseButtons.Left]     = AllArrows.User1,
+                [MouseButtons.Right]    = AllArrows.User2,
+                [MouseButtons.Middle]   = AllArrows.User3,
+            };
+            var OtherArrows = new HashSet<Arrows.Arrow> ();
 
-            if (aMouseButtons.HasFlag(MouseButtons.Right))
-                AllArrows.User2.Vector = Mouse;
+            foreach (KeyValuePair<MouseButtons, Arrows.Arrow> Situation in MouseButtonToArrowLink)
+            {
+                if (aMouseButtons.HasFlag(Situation.Key))
+                {
+                    if (MouseCapturedArrow == null)
+                        MouseCapturedArrow = Situation.Value;
+                    else if (MouseCapturedArrow != Situation.Value)
+                        OtherArrows.Add(Situation.Value);
+                }
+            }
 
-            if (aMouseButtons.HasFlag(MouseButtons.Middle))
-                AllArrows.User3.Vector = Mouse;
+            if (MouseCapturedArrow != null)
+            {
+                PrimaryArrowDeltaAngle = MouseCapturedArrow.Vector.Angle.Mirror;
+                MouseCapturedArrow.Vector = Mouse;
 
-            DebugPieStartAngle      = AllArrows.User1.Vector.FullAngle.Degrees;
+                foreach (Arrows.Arrow OtherArrow in OtherArrows)
+                {
+                    Vector2D AngleBetween = OtherArrow.Vector;
+                    AngleBetween.Rotate(PrimaryArrowDeltaAngle);
+                    Angle DeltaRotation = AngleBetween.Angle;
+
+                    Vector2D NewDirection = Mouse;
+                    NewDirection.Rotate(DeltaRotation);
+                    listBox1.Items.Add(DeltaRotation.ToString());
+                    OtherArrow.Vector = NewDirection;
+                }
+            }
+
+
+            DebugPieStartAngle      = AllArrows.User1.Vector.AbsAngle.Degrees;
             DebugPieRelativeAngle   = AllArrows.User1.Vector.AngleBetween(AllArrows.User2.Vector).Degrees;
 
             this.Repaint();
         }
+*/
+
 
         private void ClockForm_MouseDown (object sender, MouseEventArgs e)
         {
-            MouseCaptured = true;
-            EditClockByMouse(e.X, e.Y, e.Button);
+            if (VectorManipulator.IncreaseCaptureLevel(e.Button))
+            {
+                //if (VectorManipulator.MasterArrow == null)
+                //{
+                //    VectorManipulator.CaptureMaster(VectorManipulator.ButtonToArrow(e.Button));
+                //}
+                //else
+                //{
+                //    VectorManipulator.CaptureSlave(VectorManipulator.ButtonToArrow(e.Button));
+                //}
+
+                //  Переключаем часы в режим трех управляемых мышью стрелок. 
+                this.RadioBtn_TestVectors.Checked = true;
+
+                VectorManipulator.Movement(e.X, e.Y);
+                this.Repaint();
+            }
         }
 
         private void ClockForm_MouseMove (object sender, MouseEventArgs e)
         {
-            if (MouseCaptured)
+            if (VectorManipulator.CaptureMode)
             {
-                EditClockByMouse(e.X, e.Y, e.Button);
+                VectorManipulator.Movement(e.X, e.Y);
+                this.Repaint();
             }
         }
 
         private void ClockForm_MouseUp (object sender, MouseEventArgs e)
         {
-            MouseCaptured = false;
-            EditClockByMouse(e.X, e.Y, e.Button);
+            if (VectorManipulator.DecreaseCaptureLevel(e.Button))
+            {
+                //if (VectorManipulator.MasterArrow == null)
+                //{
+                //    VectorManipulator.DropEverything();
+                //}
+                //else
+                //{
+                //    VectorManipulator.DropSlave(VectorManipulator.ButtonToArrow(e.Button));
+                //}
+
+                VectorManipulator.Movement(e.X, e.Y);
+                this.Repaint();
+            }
         }
+
+
 
         private void RadioBtn_TestVectors_MouseDown (object sender, MouseEventArgs e)
         {
@@ -538,7 +609,7 @@ namespace VectorClock
 
         private void RadioBtn_TestVectors_CheckedChanged (object sender, EventArgs e)
         {
-            DebugPieStartAngle      = AllArrows.User1.Vector.FullAngle.Degrees;
+            DebugPieStartAngle      = AllArrows.User1.Vector.AbsAngle.Degrees;
             DebugPieRelativeAngle   = AllArrows.User1.Vector.AngleBetween(AllArrows.User2.Vector).Degrees;
 
             this.Repaint();
