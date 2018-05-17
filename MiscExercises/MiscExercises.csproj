@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B1A560A0-D890-464D-A9CF-7B77BCC5E1DC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MiscExercises</RootNamespace>
+    <RootNamespace>Misc</RootNamespace>
     <AssemblyName>MiscExercises</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exercises\AsyncExample1.cs" />
+    <Compile Include="Exercises\CompileTime1.cs" />
     <Compile Include="Exercises\CSharpDataTypes.cs" />
     <Compile Include="Exercises\LoopNumbers.cs" />
     <Compile Include="Exercises\ThreadSafeSingleton.cs" />
@@ -50,6 +52,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyUtils\MyUtils.csproj">
+      <Project>{ddcf0ef7-02f4-4968-b655-9c70f0204c2d}</Project>
+      <Name>MyUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

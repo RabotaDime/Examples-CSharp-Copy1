@@ -4,15 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using My.Utils;
+
+
+
 namespace Misc.Exercises
 {
-    ///   Вывести числа от 0 до 1000, кратные трем, не кратные пяти    
-    ///   и в которых сумма цифр меньше десяти.                        
     class LoopNumbers
     {
+        public static string Name = "Вывод чисел с условиями";
+
+        public static void Info ()
+        {
+            Console.Write
+            (
+                " Задача: " + 
+                "Вывести числа от 0 до 1000, кратные трем, не кратные пяти, " +
+                "и в которых сумма цифр меньше десяти."
+            );
+        }
+
+
+
         public static void Execute ()
         {
-            Console.Clear();
             Console.Write("{");
 
             string Joint = String.Empty;
@@ -37,7 +52,6 @@ namespace Misc.Exercises
             }
 
             Console.WriteLine("}");
-            Console.ReadLine();
         }
     }
 }

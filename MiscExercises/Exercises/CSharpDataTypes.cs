@@ -6,9 +6,21 @@ using System.Threading.Tasks;
 
 namespace Misc.Exercises
 {
-    ///   Проверка знания примитивных структур данных языка C#. 
     class CSharpDataTypes
     {
+        public static string Name = "Примитивные структуры данных C#";
+
+        public static void Info ()
+        {
+            Console.Write
+            (
+                " Задача: " + 
+                "Проверка знания примитивных структур данных языка C#."
+            );
+        }
+
+
+
         struct Forecast
         {
             public int Temperature  { get; set; }
@@ -25,9 +37,6 @@ namespace Misc.Exercises
 
         public static void Execute ()
         {
-            Console.Clear();
-
-
             string Weather = "солнечная";
             SetString(Weather);
             Console.WriteLine($"Сегодня {Weather} погода.\n");
@@ -50,9 +59,6 @@ namespace Misc.Exercises
             Console.WriteLine($"Температура равна {Forecast.Temperature}° по цельсию.");
             //   Выводимая температура не будет изменена, потому что структуры,
             //   в отличие от классов, это значимый/value тип данных.  
-
-
-            Console.ReadLine();
         }
     }
 }

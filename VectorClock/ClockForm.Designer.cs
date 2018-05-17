@@ -112,7 +112,7 @@
             0,
             0,
             65536});
-            this.numericUpDown1.Location = new System.Drawing.Point(12, 486);
+            this.numericUpDown1.Location = new System.Drawing.Point(12, 496);
             this.numericUpDown1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             24,
@@ -132,7 +132,7 @@
             this.numericUpDown2.DecimalPlaces = 3;
             this.numericUpDown2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.numericUpDown2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDown2.Location = new System.Drawing.Point(12, 517);
+            this.numericUpDown2.Location = new System.Drawing.Point(12, 527);
             this.numericUpDown2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             60,
@@ -152,7 +152,7 @@
             this.numericUpDown3.DecimalPlaces = 3;
             this.numericUpDown3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.numericUpDown3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDown3.Location = new System.Drawing.Point(12, 549);
+            this.numericUpDown3.Location = new System.Drawing.Point(12, 559);
             this.numericUpDown3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             60,
@@ -169,7 +169,7 @@
             // 
             this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(8, 461);
+            this.linkLabel1.Location = new System.Drawing.Point(8, 471);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(53, 21);
             this.linkLabel1.TabIndex = 10;
@@ -183,7 +183,7 @@
             this.RadioBtn_CurTime.AutoSize = true;
             this.RadioBtn_CurTime.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.RadioBtn_CurTime.Checked = true;
-            this.RadioBtn_CurTime.Location = new System.Drawing.Point(483, 8);
+            this.RadioBtn_CurTime.Location = new System.Drawing.Point(493, 8);
             this.RadioBtn_CurTime.Name = "RadioBtn_CurTime";
             this.RadioBtn_CurTime.Size = new System.Drawing.Size(128, 25);
             this.RadioBtn_CurTime.TabIndex = 11;
@@ -197,7 +197,7 @@
             this.RadioBtn_UserTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RadioBtn_UserTime.AutoSize = true;
             this.RadioBtn_UserTime.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.RadioBtn_UserTime.Location = new System.Drawing.Point(481, 30);
+            this.RadioBtn_UserTime.Location = new System.Drawing.Point(491, 30);
             this.RadioBtn_UserTime.Name = "RadioBtn_UserTime";
             this.RadioBtn_UserTime.Size = new System.Drawing.Size(129, 25);
             this.RadioBtn_UserTime.TabIndex = 11;
@@ -210,7 +210,7 @@
             this.RadioBtn_TestVectors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RadioBtn_TestVectors.AutoSize = true;
             this.RadioBtn_TestVectors.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.RadioBtn_TestVectors.Location = new System.Drawing.Point(485, 52);
+            this.RadioBtn_TestVectors.Location = new System.Drawing.Point(495, 52);
             this.RadioBtn_TestVectors.Name = "RadioBtn_TestVectors";
             this.RadioBtn_TestVectors.Size = new System.Drawing.Size(125, 25);
             this.RadioBtn_TestVectors.TabIndex = 11;
@@ -231,7 +231,7 @@
             "2",
             "3",
             "4"});
-            this.listBox1.Location = new System.Drawing.Point(305, 180);
+            this.listBox1.Location = new System.Drawing.Point(315, 180);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(502, 214);
             this.listBox1.TabIndex = 12;
@@ -243,7 +243,7 @@
             this.listBox2.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 15;
-            this.listBox2.Location = new System.Drawing.Point(351, 135);
+            this.listBox2.Location = new System.Drawing.Point(361, 135);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(502, 169);
             this.listBox2.TabIndex = 13;
@@ -254,18 +254,18 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label2.ForeColor = System.Drawing.Color.DimGray;
-            this.label2.Location = new System.Drawing.Point(15, 562);
+            this.label2.Location = new System.Drawing.Point(25, 572);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(598, 22);
             this.label2.TabIndex = 14;
-            this.label2.Text = "Test Vectors Manipulation: Left, Right, Middle mouse buttons in any order";
+            this.label2.Text = "Test Vectors Control: Left, Right, Middle mouse buttons in any order";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ClockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(622, 593);
+            this.ClientSize = new System.Drawing.Size(632, 603);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.RadioBtn_TestVectors);
