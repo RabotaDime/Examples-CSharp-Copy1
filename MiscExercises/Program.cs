@@ -27,9 +27,21 @@ namespace Misc.Exercises
             {
                 new Exercise
                 {
-                    Name        = LoopNumbers.Name,
-                    InfoFunc    = LoopNumbers.Info,
-                    ExecFunc    = LoopNumbers.Execute
+                    Name        = CLoopULongExample.Name,
+                    InfoFunc    = CLoopULongExample.Info,
+                    ExecFunc    = CLoopULongExample.Execute
+                },
+                new Exercise
+                {
+                    Name        = CBitwiseOperators.Name,
+                    InfoFunc    = CBitwiseOperators.Info,
+                    ExecFunc    = CBitwiseOperators.Execute
+                },
+                new Exercise
+                {
+                    Name        = CLoopNumbers.Name,
+                    InfoFunc    = CLoopNumbers.Info,
+                    ExecFunc    = CLoopNumbers.Execute
                 },
                 new Exercise
                 {
@@ -39,9 +51,9 @@ namespace Misc.Exercises
                 },
                 new Exercise
                 {
-                    Name        = AsyncExample1.Name,
-                    InfoFunc    = AsyncExample1.Info,
-                    ExecFunc    = AsyncExample1.Execute
+                    Name        = CAsyncExample1.Name,
+                    InfoFunc    = CAsyncExample1.Info,
+                    ExecFunc    = CAsyncExample1.Execute
                 },
             };
 

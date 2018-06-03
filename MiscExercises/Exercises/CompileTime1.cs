@@ -10,7 +10,7 @@ namespace Misc.Exercises
 {
     //   Пример условия, которое всегда равно true и дает код, 
     //   который нельзя достичь (unreachable). 
-    class CompileTime1
+    class CCompileTime1
     {
         public bool Example ()
         {

@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B1A560A0-D890-464D-A9CF-7B77BCC5E1DC}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Misc</RootNamespace>
-    <AssemblyName>MiscExercises</AssemblyName>
+    <ProjectGuid>{745DD28F-74DD-4006-8652-76599EF45EDC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>My.Windows.API</RootNamespace>
+    <AssemblyName>WindowsAPI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,30 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exercises\AsyncExample1.cs" />
-    <Compile Include="Exercises\BitwiseOperators.cs" />
-    <Compile Include="Exercises\CompileTime1.cs" />
-    <Compile Include="Exercises\CSharpDataTypes.cs" />
-    <Compile Include="Exercises\LongestLoop.cs" />
-    <Compile Include="Exercises\LoopNumbers.cs" />
-    <Compile Include="Exercises\LoopULongExample.cs" />
-    <Compile Include="Exercises\ModifyAnyWindowPos.cs" />
-    <Compile Include="Exercises\ThreadSafeSingleton.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="BaseFunctions.cs" />
+    <Compile Include="Libraries.cs" />
+    <Compile Include="SysErrorCodes.cs" />
+    <Compile Include="WindowFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MyUtils\MyUtils.csproj">
-      <Project>{ddcf0ef7-02f4-4968-b655-9c70f0204c2d}</Project>
-      <Name>MyUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WindowsAPI\WindowsAPI.csproj">
-      <Project>{745DD28F-74DD-4006-8652-76599EF45EDC}</Project>
-      <Name>WindowsAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

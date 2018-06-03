@@ -11,7 +11,7 @@ using My.Utils;
 
 namespace Misc.Exercises
 {
-    class AsyncExample1
+    class CAsyncExample1
     {
         public static string Name = "Простой пример асинхронной работы";
 

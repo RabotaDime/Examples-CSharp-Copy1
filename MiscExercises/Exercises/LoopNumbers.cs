@@ -10,7 +10,7 @@ using My.Utils;
 
 namespace Misc.Exercises
 {
-    class LoopNumbers
+    class CLoopNumbers
     {
         public static string Name = "Вывод чисел с условиями";
 

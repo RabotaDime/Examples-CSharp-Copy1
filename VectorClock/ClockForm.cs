@@ -10,8 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using My.MathUtils;
-
-
+using My.Utils;
 
 namespace VectorClock
 {

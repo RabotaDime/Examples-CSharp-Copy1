@@ -7,7 +7,7 @@
     <ProjectGuid>{DDCF0EF7-02F4-4968-B655-9C70F0204C2D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyUtils</RootNamespace>
+    <RootNamespace>My.Utils</RootNamespace>
     <AssemblyName>MyUtils</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -40,9 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitwiseOps.cs" />
     <Compile Include="CustomConsole.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="ShortCollections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
