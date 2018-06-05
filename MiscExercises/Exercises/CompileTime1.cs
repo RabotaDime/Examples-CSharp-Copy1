@@ -21,7 +21,9 @@ namespace Misc.Exercises
                 return true;
             }
 
+            #pragma warning disable CS0162 // Unreachable code detected
             return false;
+            #pragma warning restore CS0162 // Unreachable code detected
         }
 
 

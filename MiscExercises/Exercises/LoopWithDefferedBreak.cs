@@ -8,7 +8,7 @@ namespace Misc.Exercises
 {
     class CLoopULongExample
     {
-        public static string Name = "Цикл со счетчиком UInt64 от минимума, до максимума";
+        public static string Name = "Цикл с \"отложенной\" само остановкой (пример: полный UInt64 диапазон)";
 
         public static void Info ()
         {

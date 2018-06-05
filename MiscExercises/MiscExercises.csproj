@@ -49,7 +49,7 @@
     <Compile Include="Exercises\CSharpDataTypes.cs" />
     <Compile Include="Exercises\LongestLoop.cs" />
     <Compile Include="Exercises\LoopNumbers.cs" />
-    <Compile Include="Exercises\LoopULongExample.cs" />
+    <Compile Include="Exercises\LoopWithDefferedBreak.cs" />
     <Compile Include="Exercises\ModifyAnyWindowPos.cs" />
     <Compile Include="Exercises\ThreadSafeSingleton.cs" />
     <Compile Include="Program.cs" />
