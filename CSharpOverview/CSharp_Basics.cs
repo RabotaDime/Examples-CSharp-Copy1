@@ -18,9 +18,9 @@ namespace MyCode
 
     class Creature
     {
-	    protected Creature (int HiddenLifesCount)
-	    {
-	    }
+        protected Creature (int HiddenLifesCounter)
+        {
+        }
 
         public static Kitty Elizabeth = new Kitty ("Lizzy");
     }

@@ -23,6 +23,17 @@ namespace Misc.Exercises
 
         static void Main (string[] args)
         {
+            int? AutoExercise = null;
+
+            if (args.Length > 0)
+            {
+                if (int.TryParse(args[0], out int number))
+                {
+                    AutoExercise = number;
+                }
+            }
+
+
             var AllExercises = new List<Exercise>
             {
                 new Exercise
@@ -81,17 +92,25 @@ namespace Misc.Exercises
             Console.Horizontal("=");
             Console.ResetColor();
 
-            Console.CursorTop -= 2;
-            string input_number = Console.ReadLine();
-            Console.CursorTop += 1;
-
-
-            if (! int.TryParse(input_number, out int choice))
+            int choice;
+            if (AutoExercise == null)
             {
-                Console.TextColor = ConsoleColor.Red;
-                Console.WriteLine("Число введено неправильно");
-                Console.ResetColor();
-                goto Start;
+                Console.CursorTop -= 2;
+                string input_number = Console.ReadLine();
+                Console.CursorTop += 1;
+
+
+                if (! int.TryParse(input_number, out choice))
+                {
+                    Console.TextColor = ConsoleColor.Red;
+                    Console.WriteLine("Число введено неправильно");
+                    Console.ResetColor();
+                    goto Start;
+                }
+            }
+            else
+            {
+                choice = AutoExercise.Value;
             }
 
 

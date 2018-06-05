@@ -21,9 +21,11 @@ namespace Misc.Exercises
                 return true;
             }
 
-            #pragma warning disable CS0162 // Unreachable code detected
+            //  Здесь намеренно находится код, который нельзя достичь в данном примере,
+            //  поэтому я выключаю предупреждение. 
+            #pragma warning disable CS0162 
             return false;
-            #pragma warning restore CS0162 // Unreachable code detected
+            #pragma warning restore CS0162
         }
 
 

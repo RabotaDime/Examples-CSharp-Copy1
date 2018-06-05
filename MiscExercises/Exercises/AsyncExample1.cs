@@ -32,9 +32,13 @@ namespace Misc.Exercises
         {
             _Result = string.Empty;
 
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            //  В данном примере я намеренно вызываю асинхронную функцию
+            //  без ключевого слова await. Поэтому предупреждение нужно выключить,
+            //  чтобы оно не смешивалось с настоящими ошибками и предупреждениями
+            //  всего проекта, и не отвлекало тем самым от реальных проблем. 
+            #pragma warning disable CS4014
             SaySomething1();
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            #pragma warning restore CS4014
             Console.WriteLine("Проверка № 1");
             Console.WriteLine(_Result);
 
