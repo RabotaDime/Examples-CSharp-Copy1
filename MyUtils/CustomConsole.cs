@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using ConsoleBase = System.Console; 
+using System.Windows.Forms;
+using BaseConsole = System.Console; 
 
 
 
@@ -23,7 +24,32 @@ namespace My.Utils.CustomConsole
         public const string TitleDecorStart = "( ";
         public const string TitleDecorEnd   = " )";
         public const string HorizontalFill  = "-";
+
         public const string EmptyString  = "";
+
+        public const char CR = '\r';
+        public const char LF = '\n';
+
+        public const string WinEOL = "\r\n";
+
+        public const string DefaultAnyKeyMsg = "Press any key to quit...";
+
+
+
+        //   Иногда вывод в консоль требует показать какое-то сообщение
+        //   вне потока вывода. Это один из странных, но работоспособных
+        //   способов. 
+        public static void MsgBox (string msg)
+        {
+            // TODO : Организовать правильный поиск окна консоли. 
+            //BaseConsole.Title
+
+            //IntPtr console_handle = Process.GetCurrentProcess().MainWindowHandle;
+            //IWin32Window w = Control.FromHandle(console_handle);
+            //MessageBox.Show(w, msg);
+
+            MessageBox.Show(msg);
+        }
 
 
 
@@ -40,7 +66,7 @@ namespace My.Utils.CustomConsole
             string title_end    = TitleDecorEnd
         )
         {
-            int max_size = ConsoleBase.WindowWidth;
+            int max_size = BaseConsole.WindowWidth;
 
             const int MaxDecorSize = 8;
             if (title_start .Length > MaxDecorSize) title_start = title_start .Substring(0, MaxDecorSize);
@@ -57,15 +83,15 @@ namespace My.Utils.CustomConsole
             }
 
             Console.Horizontal(fill);
-            ConsoleBase.CursorTop--;
+            BaseConsole.CursorTop--;
 
-            ConsoleBase.CursorLeft += x_start;
-            ConsoleBase.Write(title_start);
-            ConsoleBase.Write(title);
-            ConsoleBase.Write(title_end);
+            BaseConsole.CursorLeft += x_start;
+            BaseConsole.Write(title_start);
+            BaseConsole.Write(title);
+            BaseConsole.Write(title_end);
 
-            ConsoleBase.CursorLeft = 0;
-            ConsoleBase.CursorTop++;
+            BaseConsole.CursorLeft = 0;
+            BaseConsole.CursorTop++;
         }
 
         public static void Horizontal
@@ -75,18 +101,18 @@ namespace My.Utils.CustomConsole
             string end      = EmptyString
         )
         {
-            int max_size = ConsoleBase.WindowWidth;
+            int max_size = BaseConsole.WindowWidth;
 
             int start_size  = Math.Min(start.Length, max_size);
             int end_size    = Math.Min(end.Length, max_size - start_size);
             int fill_size   = max_size - start_size - end_size;
 
-            ConsoleBase.Write(start.Substring(0, start_size));
+            BaseConsole.Write(start.Substring(0, start_size));
 
             int step = 0;
             while (fill_size > 0)
             {
-                ConsoleBase.Write(fill[step]);
+                BaseConsole.Write(fill[step]);
 
                 fill_size--;
 
@@ -94,103 +120,164 @@ namespace My.Utils.CustomConsole
                 if (step >= fill.Length) step = 0;
             }
 
-            ConsoleBase.Write(end.Substring(0, end_size));
+            BaseConsole.Write(end.Substring(0, end_size));
         }
 
 
 
         public static ConsoleColor TextColor
         {
-            get { return ConsoleBase.ForegroundColor; }
-            set { ConsoleBase.ForegroundColor = value; }
+            get { return BaseConsole.ForegroundColor; }
+            set { BaseConsole.ForegroundColor = value; }
         }
 
         public static ConsoleColor ForegroundColor
         {
-            get { return ConsoleBase.ForegroundColor; }
-            set { ConsoleBase.ForegroundColor = value; }
+            get { return BaseConsole.ForegroundColor; }
+            set { BaseConsole.ForegroundColor = value; }
         }
 
         public static ConsoleColor BackColor
         {
-            get { return ConsoleBase.BackgroundColor; }
-            set { ConsoleBase.BackgroundColor = value; }
+            get { return BaseConsole.BackgroundColor; }
+            set { BaseConsole.BackgroundColor = value; }
         }
 
         public static ConsoleColor BackgroundColor
         {
-            get { return ConsoleBase.BackgroundColor; }
-            set { ConsoleBase.BackgroundColor = value; }
+            get { return BaseConsole.BackgroundColor; }
+            set { BaseConsole.BackgroundColor = value; }
         }
 
         public static void ResetColor ()
         {
-            ConsoleBase.ResetColor();
+            BaseConsole.ResetColor();
         }
 
 
 
         public static void SetCursorPosition (int x, int y)
         {
-            ConsoleBase.SetCursorPosition(x, y);
+            BaseConsole.SetCursorPosition(x, y);
         }
 
         public static int CursorLeft
         {
-            get { return ConsoleBase.CursorLeft; }
-            set { ConsoleBase.CursorLeft = value; }
+            get { return BaseConsole.CursorLeft; }
+            set { BaseConsole.CursorLeft = value; }
         }
 
         public static int CursorTop
         {
-            get { return ConsoleBase.CursorTop; }
-            set { ConsoleBase.CursorTop = value; }
+            get { return BaseConsole.CursorTop; }
+            set { BaseConsole.CursorTop = value; }
         }
 
         public static bool CursorVisible
         {
-            get { return ConsoleBase.CursorVisible; }
-            set { ConsoleBase.CursorVisible = value; }
+            get { return BaseConsole.CursorVisible; }
+            set { BaseConsole.CursorVisible = value; }
         }
 
         public static int CursorSize
         {
-            get { return ConsoleBase.CursorSize; }
-            set { ConsoleBase.CursorSize = value; }
+            get { return BaseConsole.CursorSize; }
+            set { BaseConsole.CursorSize = value; }
+        }
+
+
+
+        public static void FlushOutput ()
+        {
+            BaseConsole.Out.Flush();
         }
 
 
 
         public static void Write (int value)
         {
-            ConsoleBase.Write(value);
+            BaseConsole.Write(value);
         }
 
         public static void Write (string value)
         {
-            ConsoleBase.Write(value);
+            BaseConsole.Write(value);
         }
 
         public static void WriteLine (int value)
         {
-            ConsoleBase.WriteLine(value);
+            BaseConsole.WriteLine(value);
         }
 
         public static void WriteLine (string value)
         {
-            ConsoleBase.WriteLine(value);
+            BaseConsole.WriteLine(value);
+        }
+
+        public static void WriteLine (params object[] args)
+        {
+            ConsoleColor prev_color = BaseConsole.ForegroundColor;
+            string sep = String.Empty;
+
+            foreach (object a in args)
+            {
+                if (a is ConsoleColor)
+                {
+                    BaseConsole.ForegroundColor = (ConsoleColor) a;
+                }
+                else
+                {
+                    BaseConsole.Write(sep);
+
+                    if (a is string)        BaseConsole.Write(a as string);
+                    else if (a is int)      BaseConsole.Write((int) a);
+                    else if (a is uint)     BaseConsole.Write((uint) a);
+                    else if (a is byte)     BaseConsole.Write((byte) a);
+                    else if (a is sbyte)    BaseConsole.Write((sbyte) a);
+                    else if (a is short)    BaseConsole.Write((short) a);
+                    else if (a is ushort)   BaseConsole.Write((ushort) a);
+                    else if (a is long)     BaseConsole.Write((long) a);
+                    else if (a is ulong)    BaseConsole.Write((ulong) a);
+
+                    sep = " ";
+                }
+
+            }
+
+            BaseConsole.WriteLine();
+            BaseConsole.ForegroundColor = prev_color;
         }
 
         public static void WriteLine ()
         {
-            ConsoleBase.WriteLine();
+            BaseConsole.WriteLine();
         }
 
 
 
+        public static char ReadChar (char stop_char = char.MinValue)
+        {
+            int char_value = BaseConsole.Read();
+
+            if ((char_value >= char.MinValue) && (char_value <= char.MaxValue))
+                return Convert.ToChar(char_value);
+            else
+                return stop_char;
+        }
+
         public static string ReadLine ()
         {
-            return ConsoleBase.ReadLine();
+            return BaseConsole.ReadLine();
+        }
+
+        public static ConsoleKey ReadAnyKey (string info_message = Console.DefaultAnyKeyMsg)
+        {
+            if (info_message.Length > 0) BaseConsole.WriteLine(info_message);
+
+            //  Считываю клавишу без показа ее на экран (флаг intercept: true)
+            ConsoleKeyInfo key_info = BaseConsole.ReadKey(intercept: true);
+
+            return key_info.Key;
         }
     }
 }

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB01B7CB-5A3C-41D2-BDB8-2EE7E8286B74}</ProjectGuid>
+    <ProjectGuid>{35966FF0-64BF-4073-AEE2-EFEAC4362323}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>IntegerSetConverter</RootNamespace>
-    <AssemblyName>IntegerSetConverter</AssemblyName>
+    <RootNamespace>IOChain</RootNamespace>
+    <AssemblyName>IOChain</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -31,12 +31,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>IntegerSetConverter.CProgram</StartupObject>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,18 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Approaches\1_RangeIterator.cs" />
-    <Compile Include="Approaches\2_SingleFunction.cs" />
-    <Compile Include="Approaches\4_CSharpEnvironment.cs" />
-    <Compile Include="Approaches\6_GroupedHeapStream.cs" />
-    <Compile Include="ConverterInterface.cs" />
-    <Compile Include="Approaches\3_AbstractClass.cs" />
+    <Compile Include="IO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Approaches\5_BasicTextParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyUtils\MyUtils.csproj">
+      <Project>{ddcf0ef7-02f4-4968-b655-9c70f0204c2d}</Project>
+      <Name>MyUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

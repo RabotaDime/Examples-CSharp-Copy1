@@ -20,8 +20,8 @@ namespace IntegerSetConverter
         public static string Convert
         (
             int[] aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             if (aData.Length <= 0)
@@ -30,7 +30,7 @@ namespace IntegerSetConverter
             }
 
 
-            ///   Первый шаг. Обработка первого элемента. 
+            //   Первый шаг. Обработка первого элемента. 
             int I = 0, Value;
             int Prev = aData[0];
 
@@ -41,7 +41,7 @@ namespace IntegerSetConverter
             ResultText.AppendFormat("{0}", Prev);
 
 
-            ///   Инлайн функция для повторяющегося кода.                                          
+            //===  Инлайн функция для повторяющегося кода.  =======================================                                        
             Action inline_SequenceOutput = delegate ()
             {
                 if (SequenceCounter > 0)
@@ -50,35 +50,35 @@ namespace IntegerSetConverter
                     SequenceCounter = 0;
                 }
             };
-            ///                                                                                    
+            //=====================================================================================
 
 
-            ///   Обход остальных элементов. 
+            //   Обход остальных элементов. 
             for (I = 1; I < aData.Length; I++, Prev = Value)
             {
                 Value = aData[I];
 
-                ///   Проверка значений. 
+                //   Проверка значений. 
                 if (Value <= Prev)
                     throw new ArgumentException(String.Format("The input set contains invalid data at index [{0}]. The value is less or equal to previous element.", I), "Data");
 
-                ///   Если предыдущий элемент на один шаг следует за данным, 
-                ///   значит его можно записать в последовательность. 
+                //   Если предыдущий элемент на один шаг следует за данным, 
+                //   значит его можно записать в последовательность. 
                 if (Value == Prev + 1)
                 {
                     SequenceCounter++;
                 }
                 else
                 {
-                    ///   Вывод данных об обнаруженной последовательности. 
+                    //   Вывод данных об обнаруженной последовательности. 
                     inline_SequenceOutput();
 
-                    ///   Вывод отдельного элемента. 
+                    //   Вывод отдельного элемента. 
                     ResultText.AppendFormat("{0}{1}", aSeparator, Value);
                 }
             }
 
-            ///   Вывод данных об обнаруженной последовательности. 
+            //   Вывод данных об обнаруженной последовательности. 
             inline_SequenceOutput();
 
 
@@ -90,8 +90,8 @@ namespace IntegerSetConverter
         public static int[] Convert
         (
             string aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             const int DataNumericBase = 10;
@@ -104,7 +104,7 @@ namespace IntegerSetConverter
 
             if (aSeparator  .Length <= 0) throw new ArgumentException("", "Separator");
             if (aJoint      .Length <= 0) throw new ArgumentException("", "Joint");
-            if (! ConvertOptions.Validate(aSeparator, aJoint)) throw new ArgumentException("", "Joint, Separator");
+            if (! CConvertOptions.Validate(aSeparator, aJoint)) throw new ArgumentException("", "Joint, Separator");
 
 
             Char C;
@@ -124,7 +124,7 @@ namespace IntegerSetConverter
             int LastValue           = int.MinValue;
 
 
-            ///   Две инлайн функции для повторяющегося кода.                                      
+            //===  Две инлайн функции для повторяющегося кода. ====================================                                     
             Action inline_Add = delegate ()
             {
                 int Value = ParseNumber;
@@ -142,7 +142,7 @@ namespace IntegerSetConverter
                 ResultList.Add(Value);
                 LastValue = Value;
             };
-            ///                                                                                    
+            //=====================================================================================
             Action inline_AddRange = delegate ()
             {
                 int RStart = SavedRangeStart + 1;
@@ -164,7 +164,7 @@ namespace IntegerSetConverter
                 SavedRangeStart = 0;
                 SavedRangeMode = false;
             };
-            ///                                                                                    
+            //=====================================================================================
 
 
             for (I = 0; I < aData.Length; I++)
@@ -172,7 +172,7 @@ namespace IntegerSetConverter
                 C = aData[I];
 
 
-                ///   Выбираем режим работы. 
+                //   Выбираем режим работы. 
                 ParseMode Mode = ParseMode.Error;
 
                 if (Char.IsWhiteSpace(C))
@@ -211,7 +211,7 @@ namespace IntegerSetConverter
                     {
                         if (ParseJointIndex == aJoint.Length)
                         {
-                            ///   Обнаружена связка двух чисел (диапазон). 
+                            //   Обнаружена связка двух чисел (диапазон). 
 
                             SavedRangeMode = true;
 
@@ -226,7 +226,7 @@ namespace IntegerSetConverter
                     {
                         if (ParseSeparatorIndex == aSeparator.Length)
                         {
-                            ///   Обнаружен разделитель между элементами. 
+                            //   Обнаружен разделитель между элементами. 
 
                             ParseSeparatorIndex = 0;
                         }
@@ -237,7 +237,7 @@ namespace IntegerSetConverter
                     }
                     else if ((PrevMode == ParseMode.Number) && (ParseNumberIndex > 0))
                     {
-                        ///   Обнаружено начало или продолжение числа. 
+                        //   Обнаружено начало или продолжение числа. 
 
                         if (SavedRangeMode)
                             inline_AddRange();

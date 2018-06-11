@@ -10,7 +10,7 @@ using Console = My.Utils.CustomConsole.Console;
 
 namespace Misc.Exercises
 {
-    class Program
+    class CProgram
     {
         struct Exercise
         {

@@ -21,8 +21,8 @@ namespace IntegerSetConverter
         static IEnumerable<Range> SequenceIterator
         (
             string aInputText,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             if (aInputText.Length <= 0) yield break;
@@ -118,8 +118,8 @@ namespace IntegerSetConverter
         public static string Convert
         (
             int[] aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             StringBuilder ResultText = new StringBuilder();
@@ -158,8 +158,8 @@ namespace IntegerSetConverter
         public static int[] Convert
         (
             string aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             var ResultList = new List<int>();
@@ -314,7 +314,7 @@ namespace IntegerSetConverter
 
             public override string ToString ()
             {
-                return $"{_Minimum}{ConvertOptions.DefaultJoint}{_Maximum}";
+                return $"{_Minimum}{CConvertOptions.DefaultJoint}{_Maximum}";
             }
 
         /*

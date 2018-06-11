@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IntegerSetConverter
 {
-    public class ConvertOptions
+    public class CConvertOptions
     {
         public const String DefaultSeparator     = ",";
         public const String DefaultJoint         = "..";
@@ -19,7 +19,7 @@ namespace IntegerSetConverter
 
         public string   SeparatorMask       = DefaultSeparator;
         public string   JointMask           = DefaultJoint;
-        public int      MaxElementLength    = 20;                 ///   Макс. кол-во символов в UInt64 литерале. 
+        public int      MaxElementLength    = 20;                 //  Макс. кол-во символов в UInt64 литерале. 
 
 
 
@@ -39,15 +39,15 @@ namespace IntegerSetConverter
         string Convert
         (
             int[] aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         );
 
         int[] Convert
         (
             string aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         );
 
         string ConverterName { get; }
@@ -57,8 +57,8 @@ namespace IntegerSetConverter
 
     interface INumericConverterEx
     {
-        string Convert (int[] aData, ConvertOptions aOptions);
-        int[] Convert (string aData, ConvertOptions aOptions);
+        string Convert (int[] aData, CConvertOptions aOptions);
+        int[] Convert (string aData, CConvertOptions aOptions);
     }
 }
 

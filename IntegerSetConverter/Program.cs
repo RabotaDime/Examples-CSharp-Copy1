@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace IntegerSetConverter
 {
-    ///                                                                                            
-    ///   Задача обработчика связанного набора данных сводится к двум подзадачам:                  
-    ///                                                                                            
-    ///     А) Связывание набора элементов (например, объединение набора строк в одну строку       
-    ///        разделенную запятыми, как это происходит в стандартных функциях String.Join         
-    ///        во многих языках и средах.                                                          
-    ///                                                                                            
-    ///     Б) Обработка цепочек данных, которые могут быть связаны между собой определенными      
-    ///        условиями.                                                                          
-    ///____________________________________________________________________________________________
-    ///                                                                                            
-    ///                                                                                            
-    class Program
+    //                                                                                            
+    //   Задача обработчика связанного набора данных сводится к двум подзадачам:                  
+    //                                                                                            
+    //     А) Связывание набора элементов (например, объединение набора строк в одну строку       
+    //        разделенную запятыми, как это происходит в стандартных функциях String.Join         
+    //        во многих языках и средах.                                                          
+    //                                                                                            
+    //     Б) Обработка цепочек данных, которые могут быть связаны между собой определенными      
+    //        условиями.                                                                          
+    //____________________________________________________________________________________________
+    //                                                                                            
+    //                                                                                            
+    class CProgram
     {
         static void Main(String[] args)
         {
@@ -28,13 +28,13 @@ namespace IntegerSetConverter
             {
                 { 0, new RangeIteratorConverter             { } },
 
-                ///   Преобразователь на основе двух простых функций. 
+                //   Преобразователь на основе двух простых функций. 
                 { 1, new SingleFunctionConverter            { } },
 
-                ///   Преобразователь, работающий (по возможности) на основе обычных C# методов. 
+                //   Преобразователь, работающий (по возможности) на основе обычных C# методов. 
                 { 2, new CSharpEnvironmentConverter         { } },
 
-                ///   Простейший текстовый парсер. 
+                //   Простейший текстовый парсер. 
                 { 5, new BasicTextParserConverter           { } },
             };
 
@@ -62,11 +62,11 @@ namespace IntegerSetConverter
                 goto AskNumber;
 
 
-            ///   Тест преобразования числового набора в строку. 
-            Tests.IntegerToString(CSet[CKey]);
+            //   Тест преобразования числового набора в строку. 
+            CTests.IntegerToString(CSet[CKey]);
 
-            ///   Тест преобразования строки в числовой набор. 
-            Tests.StringToInteger(CSet[CKey]);
+            //   Тест преобразования строки в числовой набор. 
+            CTests.StringToInteger(CSet[CKey]);
 
 
             /*  TODO: Пытался предотвратить передачу клавиш в VS после завершения программы,
@@ -77,13 +77,13 @@ namespace IntegerSetConverter
 
 
 
-        class Tests
+        class CTests
         {
             public static void IntegerToString (INumericConverter aConverter)
             {
-                ///                                                                                    
-                ///   Создание наборов данных. 
-                ///____________________________________________________________________________________
+                //                                                                                    
+                //   Создание наборов данных. 
+                //____________________________________________________________________________________
                 int[] Set0 = new int[] { };
                 int[] Set1 = new int[] { 1, 3, 4, 5, 7, 9 };
                 int[] Set2 = new int[] { 1, 2, 3, 4, 5 };
@@ -116,8 +116,8 @@ namespace IntegerSetConverter
                 ///____________________________________________________________________________________
                 foreach (var S in Sets)
                 {
-                    Tests.Begin(S.Key);
-                    Tests.IntroduceConverterMethod(aConverter, "int[] -> string");
+                    CTests.Begin(S.Key);
+                    CTests.IntroduceConverterMethod(aConverter, "int[] -> string");
 
 
                         Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -147,7 +147,7 @@ namespace IntegerSetConverter
                             Console.ResetColor();
                         }
                     
-                    Tests.End();
+                    CTests.End();
                 }
             }
 
@@ -186,8 +186,8 @@ namespace IntegerSetConverter
                 ///____________________________________________________________________________________
                 foreach (var S in Sets)
                 {
-                    Tests.Begin(S.Key);
-                    Tests.IntroduceConverterMethod(aConverter, "string -> int[]");
+                    CTests.Begin(S.Key);
+                    CTests.IntroduceConverterMethod(aConverter, "string -> int[]");
 
 
                         Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -224,7 +224,7 @@ namespace IntegerSetConverter
                             Console.ResetColor();
                         }
                     
-                    Tests.End();
+                    CTests.End();
                 }
             }
 

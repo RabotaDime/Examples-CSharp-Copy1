@@ -20,8 +20,8 @@ namespace IntegerSetConverter
         public static int[] Convert
         (
             string aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             throw new NotImplementedException();
@@ -32,8 +32,8 @@ namespace IntegerSetConverter
         public static string Convert
         (
             int[] aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             throw new NotImplementedException();

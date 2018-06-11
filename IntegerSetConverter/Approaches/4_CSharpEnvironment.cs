@@ -21,8 +21,8 @@ namespace IntegerSetConverter
         public static int[] Convert
         (
             string aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             var Result = new List<int> { };
@@ -70,14 +70,14 @@ namespace IntegerSetConverter
         public static string Convert
         (
             int[] aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             StringBuilder Result = new StringBuilder ();
 
 
-            ///   Создаем пронумерованный набор данных. 
+            //   Создаем пронумерованный набор данных. 
             IEnumerable<NumberRecord> DataSet = aData.Select
             (
                 (NumericValue, Index) =>
@@ -89,7 +89,7 @@ namespace IntegerSetConverter
                 }
             );
 
-            ///   Делаем выборку по группам. 
+            //   Делаем выборку по группам. 
             IEnumerable<NumberRange> ResultSet =
                 from Data in DataSet
                 orderby Data.OrderedIndex
@@ -101,7 +101,7 @@ namespace IntegerSetConverter
                     Count           = GroupedData.Count(),
                 };
 
-            ///   Формируем строку из полученных данных. 
+            //   Формируем строку из полученных данных. 
             foreach (var R in ResultSet)
             {
                 //Result.AppendFormat("\n[Key={0}, Val={1}, Count={2}]", R.DifferenceKey, R.StartValue, R.Count);
@@ -124,8 +124,8 @@ namespace IntegerSetConverter
                     );
             }
 
-            ///   Удаляем побыстрому последний разделитель. 
-            ///   При условии, что хотя бы один элемент был вставлен. 
+            //   Удаляем побыстрому последний разделитель. 
+            //   При условии, что хотя бы один элемент был вставлен. 
             if (ResultSet.Count() > 0)
                 Result.Length -= aSeparator.Length;
 

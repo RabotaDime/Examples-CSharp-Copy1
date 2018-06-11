@@ -89,11 +89,11 @@ namespace IntegerSetConverter
 
 
 
-        private static TextLiteralType PeekSymbol (Char aC, Int32 aMaskDepth, ConvertOptions aPCO)
+        private static TextLiteralType PeekSymbol (Char aC, Int32 aMaskDepth, CConvertOptions aPCO)
         {
             switch (aC)
             {
-                ///   Цифры. 
+                //   Цифры. 
                 case '0':
                 case '1':
                 case '2':
@@ -109,7 +109,7 @@ namespace IntegerSetConverter
                 }
                 //break;
 
-                ///   Пробелы и табуляция. 
+                //   Пробелы и табуляция. 
                 case ' ':
                 case '\t':
                 {
@@ -117,7 +117,7 @@ namespace IntegerSetConverter
                 }
                 //break;
 
-                ///   Иные символы для уточнения. 
+                //   Иные символы для уточнения. 
                 default:
                 {
                 }
@@ -142,7 +142,7 @@ namespace IntegerSetConverter
         (
             String          aData,
             Int32           aStartIndex,
-            ConvertOptions  aPCO
+            CConvertOptions  aPCO
         )
         {
             if (aData.Length <= 0)              throw new ArgumentException("Empty input text", "Data");
@@ -183,11 +183,11 @@ namespace IntegerSetConverter
 
 
 
-        private static void ParseElement (String aData, ref int rParseIndex, out Literal rParseResult, ConvertOptions aPCO)
+        private static void ParseElement (String aData, ref int rParseIndex, out Literal rParseResult, CConvertOptions aPCO)
         {
             rParseResult = PeekLiteral(aData, rParseIndex, aPCO);
 
-            ///   TODO: Временный отладочный вывод. 
+            //   TODO: Временный отладочный вывод. 
             Console.ForegroundColor = rParseResult.GetColorFromType();
             Console.WriteLine(String.Format
             (
@@ -206,11 +206,11 @@ namespace IntegerSetConverter
         public static int[] Convert
         (
             string aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
-            ///   TODO: Временный отладочный вывод. 
+            //   TODO: Временный отладочный вывод. 
             Console.Write("\n");
 
             List<int> Result = new List<int> (1024);
@@ -221,7 +221,7 @@ namespace IntegerSetConverter
             Literal LastNumeric = Literal.InvalidLiteral;
 
             Literal ParseResult;
-            ConvertOptions PCO = new ConvertOptions { SeparatorMask = aSeparator, JointMask = aJoint };
+            CConvertOptions PCO = new CConvertOptions { SeparatorMask = aSeparator, JointMask = aJoint };
             
 
             int I = 0;
@@ -234,15 +234,15 @@ namespace IntegerSetConverter
 
                 if (ParseResult.IsWhiteSpace())
                 {
-                    ///  Пробелы просто пропускаем. В любом количестве. 
+                    //  Пробелы просто пропускаем. В любом количестве. 
                     continue;
                 }
 
                 Next = ParseResult;
 
-                ///   Если обнаруженные элементы совпадают по типу, значит 
-                ///   мы можем уже сказать, что в данных ошибка (например, два числа следуют
-                ///   друг за другом, без иных возможных разделителей). 
+                //   Если обнаруженные элементы совпадают по типу, значит 
+                //   мы можем уже сказать, что в данных ошибка (например, два числа следуют
+                //   друг за другом, без иных возможных разделителей). 
                 if (Next.MatchType == Prev.MatchType)
                 {
                     throw new ArgumentException("Invalid elements in input data (duplicate data).", "Data");
@@ -254,7 +254,7 @@ namespace IntegerSetConverter
                     {
                         if (Prev.MatchType == TextLiteralType.Joint)
                         {
-                            ///   Связка перед числом => Новый диапазон значений. 
+                            //   Связка перед числом => Новый диапазон значений. 
 
                             int From = LastNumeric.MatchNumber + 1;
                             int Count = Next.MatchNumber - LastNumeric.MatchNumber;
@@ -268,12 +268,12 @@ namespace IntegerSetConverter
                         }
                         else if (Prev.MatchType == TextLiteralType.Separator)
                         {
-                            ///   Разделитель перед числом => Добавляем число. 
+                            //   Разделитель перед числом => Добавляем число. 
                             Result.Add(Next.MatchNumber);
                         }
                         else if (Prev.MatchType == TextLiteralType.Uncertain)
                         {
-                            ///   Первый неопределенный элемент (пустышка) = Все в порядке. 
+                            //   Первый неопределенный элемент (пустышка) = Все в порядке. 
                         }
                     }
                     break;
@@ -282,10 +282,10 @@ namespace IntegerSetConverter
                     {
                         if (Prev.MatchType == TextLiteralType.Number)
                         {
-                            ///   Разделитель групп перед числовым литералом = Все в порядке. 
+                            //   Разделитель групп перед числовым литералом = Все в порядке. 
                         }
                         else
-                            ///   Выходим с ошибкой парсера. 
+                            //   Выходим с ошибкой парсера. 
                             goto default;
                     }
                     break;
@@ -294,10 +294,10 @@ namespace IntegerSetConverter
                     {
                         if (Prev.MatchType == TextLiteralType.Number)
                         {
-                            ///   Связка перед числовым литералом = Все в порядке. 
+                            //   Связка перед числовым литералом = Все в порядке. 
                         }
                         else
-                            ///   Выходим с ошибкой парсера. 
+                            //   Выходим с ошибкой парсера. 
                             goto default;
                     }
                     break;
@@ -324,8 +324,8 @@ namespace IntegerSetConverter
         public static string Convert
         (
             int[] aData,
-            string aSeparator   = ConvertOptions.DefaultSeparator,
-            string aJoint       = ConvertOptions.DefaultJoint
+            string aSeparator   = CConvertOptions.DefaultSeparator,
+            string aJoint       = CConvertOptions.DefaultJoint
         )
         {
             int ErrorCount = 0;
@@ -338,25 +338,25 @@ namespace IntegerSetConverter
             }
 
 
-            ///   Б: Память для обработки последовательностей. 
+            //   Б: Память для обработки последовательностей. 
             int? SequenceBuffer = null;
 
 
-            ///   A: Выводим первый элемент связки. 
-            ///   Б: Это автоматическое начало новой последовательности. 
+            //   A: Выводим первый элемент связки. 
+            //   Б: Это автоматическое начало новой последовательности. 
             Result.Append(aData[0]);
             SequenceBuffer = null;
 
 
-            ///   А: Выводим набор последующих элементов, перебирая каждую связку. 
-            ///      Так как обращение к элементам (отличным от массива и набора чисел) 
-            ///      может требовать накладных ресурсов, используем дополнительный буфер 
-            ///      Prev для сохранения предыдущего элемента в наборе. 
-            ///      
-            ///      [D(1)] \ 
-            ///              [Связка J] 
-            ///      [D(2)] / 
-            ///      
+            //   А: Выводим набор последующих элементов, перебирая каждую связку. 
+            //      Так как обращение к элементам (отличным от массива и набора чисел) 
+            //      может требовать накладных ресурсов, используем дополнительный буфер 
+            //      Prev для сохранения предыдущего элемента в наборе. 
+            //      
+            //      [D(1)] \ 
+            //              [Связка J] 
+            //      [D(2)] / 
+            //      
             //       Вариант цикла без учета накладных ресурсов при обращении к данным:
             //          for (int J = 1; J < aData.Length; J++) {
             //              int Prev = aData[J - 1];
@@ -367,28 +367,28 @@ namespace IntegerSetConverter
             {
                 int Next = aData[J];
 
-                ///   Б: Если соблюдается первое условие между двумя элементами 
+                //   Б: Если соблюдается первое условие между двумя элементами 
                 if (Prev < Next)
                 {
-                    ///   Б: Если предыдущий элемент можно связать с последующим, 
-                    ///      значит мы сохраняем данные об этой последовательности 
-                    ///      и в данный момент не выводим строку. 
+                    //   Б: Если предыдущий элемент можно связать с последующим, 
+                    //      значит мы сохраняем данные об этой последовательности 
+                    //      и в данный момент не выводим строку. 
                     if (Prev + 1 == Next)
                     {
                         SequenceBuffer = Next;
                     }
-                    ///   Б: Иначе, если последующий элемент не связан условием с предыдущим 
+                    //   Б: Иначе, если последующий элемент не связан условием с предыдущим 
                     else
                     {
-                        ///   Б: Выводим сохраненную информацию о прошедшей найденной 
-                        ///      последовательности. 
+                        //   Б: Выводим сохраненную информацию о прошедшей найденной 
+                        //      последовательности. 
                         if (SequenceBuffer != null)
                         {
                             Result.AppendFormat("{0}{1}", /* 0 */ aJoint, /* 1 */ SequenceBuffer);
                             SequenceBuffer = null;
                         }
 
-                        ///   А: Выводим последующий, не связанный с предыдущим элемент. 
+                        //   А: Выводим последующий, не связанный с предыдущим элемент. 
                         Result.AppendFormat("{0}{1}", /* 0 */ aSeparator, /* 1 */ Next);
                     }
                 }
@@ -397,13 +397,13 @@ namespace IntegerSetConverter
                     ErrorCount++;
                 }
 
-                ///   А: Устанавливаем предыдущий элемент для обхода связок. 
+                //   А: Устанавливаем предыдущий элемент для обхода связок. 
                 Prev = Next;
             }
 
 
-            ///   Б: Сброс буфера и вывод сохраненной информации о последней найденной 
-            ///      последовательности. 
+            //   Б: Сброс буфера и вывод сохраненной информации о последней найденной 
+            //      последовательности. 
             if (SequenceBuffer != null)
             {
                 Result.AppendFormat("{0}{1}", /* 0 */ aJoint, /* 1 */ SequenceBuffer);
@@ -429,12 +429,12 @@ namespace IntegerSetConverter
             return Convert(aData, aSeparator, aJoint);
         }
 
-        string INumericConverterEx.Convert(int[] aData, ConvertOptions aOptions)
+        string INumericConverterEx.Convert(int[] aData, CConvertOptions aOptions)
         {
             return Convert(aData, aOptions.SeparatorMask, aOptions.JointMask);
         }
 
-        int[] INumericConverterEx.Convert(string aData, ConvertOptions aOptions)
+        int[] INumericConverterEx.Convert(string aData, CConvertOptions aOptions)
         {
             return Convert(aData, aOptions.SeparatorMask, aOptions.JointMask);
         }
